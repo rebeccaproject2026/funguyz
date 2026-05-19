@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-brand-red: #FA0C83;
+  --color-brand-red-hover: #01CBDF;
+  --color-brand-dark: #161616;
+  --color-brand-gray: #f4f4f5;
+  --color-brand-border: #e4e4e7;
+  --font-sans: 'Lato', sans-serif;
+  --font-display: 'Lato', sans-serif;
+  --spacing-15: 3.75rem;
+}
+
+.h-15 {
+  height: 3.75rem;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-brand-dark);
+  color: #fafafa;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Premium micro-scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #d4d4d8;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a1a1aa;
+}
+
+/* Custom styles for animations */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
