@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import {
   Search, Heart, ShoppingBag, User, ChevronDown,
-  X, Flame, Tag, Clock, ArrowRight, CornerDownRight
+  X, Flame, Tag, Clock, ArrowRight, CornerDownRight, Store
 } from 'lucide-react'
 import MushroomLogo from './MushroomLogo'
 import funguyzLogo from '../assets/images/funguyzlogo.png'
@@ -48,10 +49,9 @@ export default function Header({
   }, [isSearchOpen])
 
   const navItems = [
-    { id: 'home', label: 'HOME' },
     { id: 'shop', label: 'SHOP', hasDropdown: true },
-    { id: 'about-us', label: 'ABOUT US', hasDropdown: true },
-    { id: 'blog', label: 'BLOG' }
+    { id: 'on-sale', label: 'ON SALE', hasDropdown: false },
+    { id: 'bundles', label: 'BUNDLES', hasDropdown: false }
   ]
 
   const trendingSearches = ['Mushroom Utility Jacket', 'Oversized Logo Tee', 'Crimson Crew Socks', 'Sling Canvas Bag']
@@ -62,8 +62,17 @@ export default function Header({
     { id: 3, name: 'Technical Cargo Runner Pants', price: '$110.00', image: 'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&q=80&w=150' }
   ]
 
+  const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
+
+  useEffect(() => {
+    const handleResize = () => setWindowWidth(window.innerWidth)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
   // Decide if dock is in Shrunk or Expanded state
-  const isCompact = isScrolled && !isHovered
+  // Once scrolled or on mobile, header stays compact
+  const isCompact = isScrolled || windowWidth < 768
 
   return (
     <>
@@ -85,136 +94,188 @@ export default function Header({
             }`}
           transition={{ type: 'spring', damping: 26, stiffness: 220 }}
         >
-          {/* Logo Group */}
-          <img
-            src={funguyzLogo}
-            alt="Funguyz Logo"
-            className="w-auto object-contain transition-all duration-300"
-            style={isCompact ? {
-              height: '47px',
-              marginTop: '-7px',
-              marginBottom: '-8px',
-              marginLeft: '-4px',
-              marginRight: '-3px'
-            } : {
-              height: '73px',
-              marginTop: '-11px',
-              marginBottom: '-12px',
-              marginLeft: '-6px',
-              marginRight: '-5px'
-            }}
-          />
-          {/* Navigation Links with Sliding Blob Hover (Hidden in Compact) */}
-          {!isCompact && (
-            <nav className="hidden md:flex items-center gap-2 relative">
-              {navItems.map((item) => {
-                const isActiveLink = hoveredLink === item.id;
-
-                return (
-                  <div
-                    key={item.id}
-                    className="relative px-4 py-2 cursor-pointer rounded-full"
-                    onMouseEnter={() => {
-                      setHoveredLink(item.id)
-                      if (item.hasDropdown) {
-                        setIsCategoryOpen(true)
-                      } else {
-                        setIsCategoryOpen(false)
-                      }
-                    }}
-                  >
-                    {/* Sliding Red Blob Background */}
-                    {isActiveLink && (
-                      <motion.span
-                        layoutId="navBlob"
-                        className="absolute inset-0 bg-brand-red rounded-full z-0"
-                        transition={{ type: 'spring', stiffness: 350, damping: 28 }}
-                      />
-                    )}
-
-                    <a
-                      href={`#${item.id}`}
-                      className={`relative z-10 flex items-center gap-1 font-display font-extrabold text-[13px] tracking-widest transition-colors duration-200 ${isActiveLink ? 'text-white' : 'text-white/80'
-                        }`}
-                    >
-                      <span>{item.label}</span>
-                      {item.hasDropdown && <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isActiveLink ? 'rotate-180 text-white' : 'text-white/60'
-                        }`} />}
-                    </a>
-                  </div>
-                );
-              })}
-            </nav>
-          )}
-
-          {/* Utility Buttons Dock (Search, Login, Wishlist, Cart) */}
-          <div className="flex items-center gap-3">
-
-            {/* Search Icon Trigger */}
-            <motion.button
-              onClick={() => setIsSearchOpen(true)}
-              whileHover={{ scale: 1.08 }}
-              whileTap={{ scale: 0.92 }}
-              className="p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all cursor-pointer text-white/90"
-            >
-              <Search className="w-4.5 h-4.5" />
-            </motion.button>
-
-            {/* Profile Drawer Trigger (Hidden in Compact desktop, visible on hover) */}
-            {!isCompact && (
-              <motion.button
-                onClick={onOpenLogin}
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.92 }}
-                className="p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all cursor-pointer text-white/90"
-              >
-                <User className="w-4.5 h-4.5" />
-              </motion.button>
-            )}
-
-            {/* Wishlist Heart Icon (Hidden in Compact desktop) */}
-            {!isCompact && (
-              <motion.button
-                whileHover={{ scale: 1.08 }}
-                whileTap={{ scale: 0.92 }}
-                className="relative p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red hover:shadow-md transition-all cursor-pointer text-white/90 group"
-              >
-                <Heart className="w-4.5 h-4.5" />
-                {wishlistCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-brand-red text-white group-hover:bg-white group-hover:text-brand-red transition-colors rounded-full flex items-center justify-center text-[9px] font-bold">
-                    {wishlistCount}
-                  </span>
-                )}
-              </motion.button>
-            )}
-
-            {/* Bag/Cart Trigger Capsule */}
-            <motion.button
-              onClick={onOpenCart}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="relative flex items-center gap-2 px-3.5 py-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red hover:shadow-lg transition-all cursor-pointer text-white group"
-            >
-              <div className="relative">
-                <ShoppingBag className="w-4.5 h-4.5 opacity-80" />
-                {cartCount > 0 && (
-                  <motion.span
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    className="absolute -top-3 -right-2.5 w-4 h-4 bg-brand-red text-white group-hover:bg-white group-hover:text-brand-red transition-colors rounded-full flex items-center justify-center text-[9px] font-black"
-                  >
-                    {cartCount}
-                  </motion.span>
-                )}
+          {isCompact ? (
+            <>
+              {/* COMPACT LEFT: Search, Heart */}
+              <div className="flex items-center gap-3">
+                <motion.button
+                  onClick={() => setIsSearchOpen(true)}
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  className="p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all cursor-pointer text-white/90"
+                >
+                  <Search className="w-4.5 h-4.5" />
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  className="relative p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red hover:shadow-md transition-all cursor-pointer text-white/90 group"
+                >
+                  <Heart className="w-4.5 h-4.5" />
+                  {wishlistCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-brand-red text-white group-hover:bg-white group-hover:text-brand-red transition-colors rounded-full flex items-center justify-center text-[9px] font-bold">
+                      {wishlistCount}
+                    </span>
+                  )}
+                </motion.button>
               </div>
-              {!isCompact && (
-                <span className="text-xs font-black tracking-tight hidden sm:inline">
-                  ${cartSubtotal.toFixed(2)}
-                </span>
-              )}
-            </motion.button>
 
-          </div>
+              {/* COMPACT CENTER: Logo (Absolute) */}
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                <Link to="/" className="cursor-pointer block">
+                  <img
+                    src={funguyzLogo}
+                    alt="Funguyz Logo"
+                    className="w-auto object-contain transition-all duration-300"
+                    style={{
+                      height: '47px',
+                      marginTop: '-7px',
+                      marginBottom: '-8px'
+                    }}
+                  />
+                </Link>
+              </div>
+
+              {/* COMPACT RIGHT: Shop, Cart */}
+              <div className="flex items-center gap-3">
+                <motion.a
+                  href="/#shop"
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  className="p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all cursor-pointer text-white/90"
+                >
+                  <Store className="w-4.5 h-4.5" />
+                </motion.a>
+                <motion.button
+                  onClick={onOpenCart}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="relative p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red hover:shadow-lg transition-all cursor-pointer text-white group"
+                >
+                  <ShoppingBag className="w-4.5 h-4.5 opacity-80" />
+                  {cartCount > 0 && (
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute -top-1 -right-1 w-4 h-4 bg-brand-red text-white group-hover:bg-white group-hover:text-brand-red transition-colors rounded-full flex items-center justify-center text-[9px] font-bold"
+                    >
+                      {cartCount}
+                    </motion.span>
+                  )}
+                </motion.button>
+              </div>
+            </>
+          ) : (
+            <>
+              {/* EXPANDED LEFT: Logo */}
+              <Link to="/" className="cursor-pointer">
+                <img
+                  src={funguyzLogo}
+                  alt="Funguyz Logo"
+                  className="w-auto object-contain transition-all duration-300"
+                  style={{
+                    height: '73px',
+                    marginTop: '-11px',
+                    marginBottom: '-12px',
+                    marginLeft: '-6px',
+                    marginRight: '-5px'
+                  }}
+                />
+              </Link>
+
+              {/* EXPANDED CENTER: Navigation Links */}
+              <nav className="flex items-center gap-2 relative">
+                {navItems.map((item) => {
+                  const isActiveLink = hoveredLink === item.id;
+                  return (
+                    <div
+                      key={item.id}
+                      className="relative px-4 py-2 cursor-pointer rounded-full"
+                      onMouseEnter={() => {
+                        setHoveredLink(item.id)
+                        if (item.hasDropdown) {
+                          setIsCategoryOpen(true)
+                        } else {
+                          setIsCategoryOpen(false)
+                        }
+                      }}
+                    >
+                      {isActiveLink && (
+                        <motion.span
+                          layoutId="navBlob"
+                          className="absolute inset-0 bg-brand-red rounded-full z-0"
+                          transition={{ type: 'spring', stiffness: 350, damping: 28 }}
+                        />
+                      )}
+                      <a
+                        href={`/#${item.id}`}
+                        className={`relative z-10 flex items-center gap-1 font-display font-extrabold text-[13px] tracking-widest transition-colors duration-200 ${isActiveLink ? 'text-white' : 'text-white/80'
+                          }`}
+                      >
+                        <span>{item.label}</span>
+                        {item.hasDropdown && <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isActiveLink ? 'rotate-180 text-white' : 'text-white/60'
+                          }`} />}
+                      </a>
+                    </div>
+                  );
+                })}
+              </nav>
+
+              {/* EXPANDED RIGHT: Utility Buttons */}
+              <div className="flex items-center gap-3">
+                <motion.button
+                  onClick={() => setIsSearchOpen(true)}
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  className="p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all cursor-pointer text-white/90"
+                >
+                  <Search className="w-4.5 h-4.5" />
+                </motion.button>
+                <motion.button
+                  onClick={onOpenLogin}
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  className="p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all cursor-pointer text-white/90"
+                >
+                  <User className="w-4.5 h-4.5" />
+                </motion.button>
+                <motion.button
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  className="relative p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red hover:shadow-md transition-all cursor-pointer text-white/90 group"
+                >
+                  <Heart className="w-4.5 h-4.5" />
+                  {wishlistCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-brand-red text-white group-hover:bg-white group-hover:text-brand-red transition-colors rounded-full flex items-center justify-center text-[9px] font-bold">
+                      {wishlistCount}
+                    </span>
+                  )}
+                </motion.button>
+                <motion.button
+                  onClick={onOpenCart}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="relative p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red hover:shadow-md transition-all cursor-pointer text-white/90 group"
+                >
+                  <div className="relative">
+                    <ShoppingBag className="w-4.5 h-4.5 opacity-80" />
+                    {cartCount > 0 && (
+                      <motion.span
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        className="absolute -top-3 -right-2.5 w-4 h-4 bg-brand-red text-white group-hover:bg-white group-hover:text-brand-red transition-colors rounded-full flex items-center justify-center text-[9px] font-black"
+                      >
+                        {cartCount}
+                      </motion.span>
+                    )}
+                  </div>
+                  <span className="text-xs font-black tracking-tight">
+                    {/* ${cartSubtotal.toFixed(2)} */}
+                  </span>
+                </motion.button>
+              </div>
+            </>
+          )}
 
           {/* 4. FLOATING CATEGORY DROP SHELF */}
           <AnimatePresence>
@@ -236,7 +297,7 @@ export default function Header({
                           {['Magic Mushrooms', 'Freeze Dried Mushrooms', 'Shroom Capsules', 'Shroom Gummies'].map((link) => (
                             <li key={link} className="flex items-center gap-1.5 group">
                               <CornerDownRight className="w-3.5 h-3.5 text-white/20 group-hover:text-brand-red transition-colors" />
-                              <a href="#shop" className="text-xs font-bold text-zinc-400 hover:text-white transition-colors">
+                              <a href="/#shop" className="text-xs font-bold text-zinc-400 hover:text-white transition-colors">
                                 {link}
                               </a>
                             </li>
@@ -251,7 +312,7 @@ export default function Header({
                           {['Shroom Chocolates', 'Shroom Tea', 'Shroom Syrup', 'Shroom Aid'].map((link) => (
                             <li key={link} className="flex items-center gap-1.5 group">
                               <CornerDownRight className="w-3.5 h-3.5 text-white/20 group-hover:text-brand-red transition-colors" />
-                              <a href="#shop" className="text-xs font-bold text-zinc-400 hover:text-white transition-colors">
+                              <a href="/#shop" className="text-xs font-bold text-zinc-400 hover:text-white transition-colors">
                                 {link}
                               </a>
                             </li>
@@ -266,7 +327,7 @@ export default function Header({
                           {['DMT Vape', 'LSD', 'Merch', 'Connoisseur Box'].map((link) => (
                             <li key={link} className="flex items-center gap-1.5 group">
                               <CornerDownRight className="w-3.5 h-3.5 text-white/20 group-hover:text-brand-red transition-colors" />
-                              <a href="#shop" className="text-xs font-bold text-zinc-400 hover:text-white transition-colors">
+                              <a href="/#shop" className="text-xs font-bold text-zinc-400 hover:text-white transition-colors">
                                 {link}
                               </a>
                             </li>
@@ -276,54 +337,7 @@ export default function Header({
                     </>
                   )}
 
-                  {hoveredLink === 'about-us' && (
-                    <>
-                      {/* About Us Col 1 */}
-                      <div className="space-y-4">
-                        <h3 className="text-xs font-black text-brand-red uppercase tracking-widest">Our Brand</h3>
-                        <ul className="space-y-2">
-                          {['Our Story', 'Mission & Vision', 'The Team', 'Sustainability'].map((link) => (
-                            <li key={link} className="flex items-center gap-1.5 group">
-                              <CornerDownRight className="w-3.5 h-3.5 text-white/20 group-hover:text-brand-red transition-colors" />
-                              <a href="#about" className="text-xs font-bold text-zinc-400 hover:text-white transition-colors">
-                                {link}
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
 
-                      {/* About Us Col 2 */}
-                      <div className="space-y-4">
-                        <h3 className="text-xs font-black text-brand-red uppercase tracking-widest">Support</h3>
-                        <ul className="space-y-2">
-                          {['Contact Us', 'FAQ', 'Shipping Info', 'Returns'].map((link) => (
-                            <li key={link} className="flex items-center gap-1.5 group">
-                              <CornerDownRight className="w-3.5 h-3.5 text-white/20 group-hover:text-brand-red transition-colors" />
-                              <a href="#about" className="text-xs font-bold text-zinc-400 hover:text-white transition-colors">
-                                {link}
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      {/* About Us Col 3 */}
-                      <div className="space-y-4">
-                        <h3 className="text-xs font-black text-brand-red uppercase tracking-widest">Partner</h3>
-                        <ul className="space-y-2">
-                          {['Wholesale', 'Affiliates', 'Careers', 'Press'].map((link) => (
-                            <li key={link} className="flex items-center gap-1.5 group">
-                              <CornerDownRight className="w-3.5 h-3.5 text-white/20 group-hover:text-brand-red transition-colors" />
-                              <a href="#about" className="text-xs font-bold text-zinc-400 hover:text-white transition-colors">
-                                {link}
-                              </a>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </>
-                  )}
 
                   {/* Col 4: Hot Flyer Card */}
                   <div className="bg-[#09090b] text-white rounded-3xl p-5 border border-zinc-800 relative overflow-hidden flex flex-col justify-between h-[180px] group">
@@ -332,7 +346,7 @@ export default function Header({
                       <span className="text-[8px] font-black bg-brand-red px-2 py-0.5 rounded-full tracking-widest">HOT COMBO</span>
                       <h4 className="font-display font-black text-sm mt-3 leading-tight">FREE SOCKS WITH<br />MUSHROOM CAP DROP</h4>
                     </div>
-                    <a href="#shop" className="text-[10px] font-black text-brand-red hover:text-white flex items-center gap-1">
+                    <a href="/#shop" className="text-[10px] font-black text-brand-red hover:text-white flex items-center gap-1">
                       <span>REDEEM OFFER</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                     </a>

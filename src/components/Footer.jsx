@@ -1,42 +1,43 @@
 import React, { useState } from 'react'
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { MapPin, Phone, Mail, Clock, ArrowRight } from 'lucide-react'
 import funguyzLogo from '../assets/images/funguyzlogo.png'
 
 // Inline SVG social icons (lucide doesn't export brand icons)
 const FacebookIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
-    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
   </svg>
 )
 const TwitterIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
-    <path d="M4 4l16 16M4 20L20 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none"/>
+    <path d="M4 4l16 16M4 20L20 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
   </svg>
 )
 const LinkedinIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
-    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z"/>
-    <circle cx="4" cy="4" r="2"/>
+    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z" />
+    <circle cx="4" cy="4" r="2" />
   </svg>
 )
 const InstagramIcon = () => (
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-3.5 h-3.5">
-    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-    <circle cx="12" cy="12" r="4"/>
-    <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor"/>
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+    <circle cx="12" cy="12" r="4" />
+    <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
   </svg>
 )
 const YoutubeIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
-    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z"/>
-    <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white"/>
+    <path d="M22.54 6.42a2.78 2.78 0 0 0-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46A2.78 2.78 0 0 0 1.46 6.42 29 29 0 0 0 1 12a29 29 0 0 0 .46 5.58 2.78 2.78 0 0 0 1.95 1.96C5.12 20 12 20 12 20s6.88 0 8.59-.46a2.78 2.78 0 0 0 1.95-1.96A29 29 0 0 0 23 12a29 29 0 0 0-.46-5.58z" />
+    <polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02" fill="white" />
   </svg>
 )
 const RssIcon = () => (
   <svg viewBox="0 0 24 24" fill="currentColor" className="w-3.5 h-3.5">
-    <path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/>
-    <circle cx="5" cy="19" r="1"/>
+    <path d="M4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16" />
+    <circle cx="5" cy="19" r="1" />
   </svg>
 )
 
@@ -47,12 +48,12 @@ const footerLinks = {
 }
 
 const socials = [
-  { icon: FacebookIcon,  color: '#1877F2', label: 'Facebook'  },
-  { icon: TwitterIcon,   color: '#1DA1F2', label: 'Twitter'   },
-  { icon: LinkedinIcon,  color: '#0A66C2', label: 'LinkedIn'  },
+  { icon: FacebookIcon, color: '#1877F2', label: 'Facebook' },
+  { icon: TwitterIcon, color: '#1DA1F2', label: 'Twitter' },
+  { icon: LinkedinIcon, color: '#0A66C2', label: 'LinkedIn' },
   { icon: InstagramIcon, color: '#E1306C', label: 'Instagram' },
-  { icon: YoutubeIcon,   color: '#FF0000', label: 'YouTube'   },
-  { icon: RssIcon,       color: '#f9362d', label: 'RSS'       },
+  { icon: YoutubeIcon, color: '#FF0000', label: 'YouTube' },
+  { icon: RssIcon, color: '#f9362d', label: 'RSS' },
 ]
 
 const paymentIcons = ['VISA', 'PayPal', 'Discover', 'MC', 'Maestro', 'Amex']
@@ -83,9 +84,9 @@ export default function Footer() {
             <div className="space-y-2">
               {[
                 { icon: MapPin, text: '2046 Shroom St, Vancouver, BC' },
-                { icon: Phone,  text: '+1 (576) 245-2470'             },
-                { icon: Mail,   text: 'info@funguyz.com'              },
-                { icon: Clock,  text: 'Mon – Fri / 9:00 AM – 6:00 PM'},
+                { icon: Phone, text: '+1 (576) 245-2470' },
+                { icon: Mail, text: 'info@funguyz.com' },
+                { icon: Clock, text: 'Mon – Fri / 9:00 AM – 6:00 PM' },
               ].map(({ icon: Icon, text }, i) => (
                 <div key={i} className="flex items-start gap-3 text-zinc-400 hover:text-white text-sm transition-colors duration-200 group">
                   <Icon className="w-4 h-4 mt-0.5 flex-shrink-0 text-[#FA0C83] group-hover:scale-110 transition-transform duration-200" />
@@ -102,19 +103,36 @@ export default function Footer() {
                 {heading}
               </h4>
               <ul className="space-y-2">
-                {links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="text-zinc-400 hover:text-white text-sm font-medium transition-all duration-300 flex items-center gap-2 group relative py-0.5"
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#FA0C83] opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300" />
-                      <span className="group-hover:translate-x-1 transition-transform duration-300">
-                        {link}
-                      </span>
-                    </a>
-                  </li>
-                ))}
+                {links.map((link) => {
+                  const isContact = link === 'Contact Us';
+                  const isBlog = link === 'Latest News';
+
+                  return (
+                    <li key={link}>
+                      {isContact || isBlog ? (
+                        <Link
+                          to={isContact ? '/contact-us' : '/blog'}
+                          className="text-zinc-400 hover:text-white text-sm font-medium transition-all duration-300 flex items-center gap-2 group relative py-0.5"
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#FA0C83] opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300" />
+                          <span className="group-hover:translate-x-1 transition-transform duration-300">
+                            {link}
+                          </span>
+                        </Link>
+                      ) : (
+                        <a
+                          href={link === 'My Shop' || link === 'Store Location' ? '/#shop' : '/'}
+                          className="text-zinc-400 hover:text-white text-sm font-medium transition-all duration-300 flex items-center gap-2 group relative py-0.5"
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#FA0C83] opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300" />
+                          <span className="group-hover:translate-x-1 transition-transform duration-300">
+                            {link}
+                          </span>
+                        </a>
+                      )}
+                    </li>
+                  )
+                })}
               </ul>
             </div>
           ))}
@@ -193,6 +211,11 @@ export default function Footer() {
             <a href="#" className="hover:text-white transition-colors">Privacy</a>
             <a href="#" className="hover:text-white transition-colors">Cookies</a>
           </div>
+        </div>
+        <div className="text-center pb-4">
+          <p className="text-zinc-400 text-xs font-bold tracking-wider">
+            Sourced from <a href="https://www.mushroomexpert.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">MushroomExpert.com</a>
+          </p>
         </div>
       </div>
     </footer>

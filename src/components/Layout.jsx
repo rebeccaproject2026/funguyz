@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Outlet } from 'react-router-dom'
 import AnnouncementTicker from './AnnouncementTicker'
 import Header from './Header'
 import Footer from './Footer'
 import CartDrawer from './CartDrawer'
 import LoginDrawer from './LoginDrawer'
+import AddedToBagToast from './AddedToBagToast'
 import Lenis from 'lenis'
 
 import main5 from '../assets/main5.jpg'
@@ -15,6 +16,10 @@ export default function Layout() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [wishlistCount, setWishlistCount] = useState(2)
+
+  // Toast state
+  const [toast, setToast] = useState({ visible: false, item: null })
+  const toastTimerRef = useRef(null)
 
   // Initialize Lenis smooth scroll
   useEffect(() => {
@@ -104,7 +109,18 @@ export default function Layout() {
         }
       ]
     })
-    setIsCartOpen(true)
+
+    // Show toast — stays open until manually closed
+    const addedItem = {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      quantity: 1,
+      size: product.size || 'Whole',
+      image: product.image
+    }
+    if (toastTimerRef.current) clearTimeout(toastTimerRef.current)
+    setToast({ visible: true, item: addedItem })
   }
 
   // CTA Shop Now action -> adds the cryogenic reserve shrooms package to cart and slides drawer open!
@@ -160,6 +176,15 @@ export default function Layout() {
       <LoginDrawer
         isOpen={isLoginOpen}
         onClose={() => setIsLoginOpen(false)}
+      />
+
+      {/* Added to Bag Toast */}
+      <AddedToBagToast
+        item={toast.item}
+        subtotal={cartSubtotal}
+        isVisible={toast.visible}
+        onClose={() => setToast({ visible: false, item: null })}
+        onViewCart={() => setIsCartOpen(true)}
       />
 
     </div>

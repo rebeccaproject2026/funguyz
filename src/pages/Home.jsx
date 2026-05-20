@@ -1,7 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react'
+/* eslint-disable react-hooks/purity */
+/* eslint-disable no-useless-assignment */
+/* eslint-disable no-unused-vars */
+import { useState, useRef, useEffect } from 'react'
 import { useOutletContext } from 'react-router-dom'
-import { motion, AnimatePresence, useMotionValue, useSpring, useAnimationFrame, useInView } from 'framer-motion'
-import { Star, Heart, ArrowRight, Sparkles, Shuffle, ZoomIn, Truck, RotateCcw, ShieldCheck, Headphones, Calendar, User, Clock, ChevronLeft, ChevronRight, MapPin, Phone, Mail, Send } from 'lucide-react'
+import { motion, AnimatePresence, useMotionValue, useSpring, useAnimationFrame } from 'framer-motion'
+import { Star, ArrowRight, Sparkles, Shuffle, ZoomIn, Truck, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
 import Hero from '../components/Hero'
 
 // Import user-uploaded luxury mushroom assets
@@ -12,7 +15,10 @@ import main1 from '../assets/main1.jpg'
 import main4 from '../assets/main4.jpg'
 import main2 from '../assets/main2.jpg'
 import main3 from '../assets/main3.jpg'
-
+import avatar1 from '../assets/images/customer1.jpg'
+import avatar2 from '../assets/images/customer2.jpg'
+import avatar3 from '../assets/images/customer3.jpg'
+import customerbg from '../assets/images/customerbg.jpg'
 // 3D Parallax Tilt Category Card Component with Cursor Spotlight and Glossy Shimmer
 function CategoryCard({ cat, index, handleShopNowClick }) {
   const cardRef = useRef(null)
@@ -550,7 +556,7 @@ function OfferCard({ offer, handleShopNowClick, index }) {
 }
 
 // Premium Showroom Product Card with Stacked Fan Cards, Spotlight Glow, 3D Spring Tilt & Cyberpunk Hover Shadows
-function ShowroomProductCard({ product, handleAddToCart, handleAddToWishlist, variants }) {
+function ShowroomProductCard({ product, handleAddToCart, variants }) {
   const cardRef = useRef(null)
   const [rotateX, setRotateX] = useState(0)
   const [rotateY, setRotateY] = useState(0)
@@ -795,11 +801,11 @@ function ShowroomProductCard({ product, handleAddToCart, handleAddToWishlist, va
 export default function Home() {
   const { handleShopNowClick, handleAddToCart, handleAddToWishlist } = useOutletContext() || {};
 
-  const [activeTab, setActiveTab] = useState('best-selling')
 
   const [activeReview, setActiveReview] = useState(0)
   const [activeBlog, setActiveBlog] = useState(0)
   const [blogDirection, setBlogDirection] = useState(1)
+  const [blogTimerKey, setBlogTimerKey] = useState(0)
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
 
   useEffect(() => {
@@ -808,18 +814,7 @@ export default function Home() {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const [helpfulStates, setHelpfulStates] = useState({ 0: false, 1: false, 2: false })
-  const [helpfulCounts, setHelpfulCounts] = useState({ 0: 42, 1: 29, 2: 37 })
 
-  const handleHelpfulClick = (idx) => {
-    if (helpfulStates[idx]) {
-      setHelpfulStates(prev => ({ ...prev, [idx]: false }))
-      setHelpfulCounts(prev => ({ ...prev, [idx]: prev[idx] - 1 }))
-    } else {
-      setHelpfulStates(prev => ({ ...prev, [idx]: true }))
-      setHelpfulCounts(prev => ({ ...prev, [idx]: prev[idx] + 1 }))
-    }
-  }
 
   const reviews = [
     {
@@ -828,7 +823,7 @@ export default function Home() {
       rating: 5,
       text: "Absolute game changer. The microdose capsules helped me regain mental clarity and crushed my daily anxiety. Quick shipping too!",
       product: "Microdose Calm Capsules",
-      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300&h=300",
+      avatar: avatar1,
       date: "2 days ago"
     },
     {
@@ -837,7 +832,7 @@ export default function Home() {
       rating: 5,
       text: "The Belgian dark chocolate edibles are not only delicious, but the dosing is incredibly accurate. 10/10 will order again.",
       product: "Belgian Dark Confectionery",
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=300&h=300",
+      avatar: avatar2,
       date: "1 week ago"
     },
     {
@@ -846,35 +841,35 @@ export default function Home() {
       rating: 5,
       text: "High quality magic strains, professionally packaged and delivered discreetly. Funguyz is the gold standard in Canada.",
       product: "Dried Reserve Strains",
-      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=300&h=300",
+      avatar: avatar3,
       date: "3 days ago"
     }
   ]
 
   const features = [
     {
+      icon: Sparkles,
+      title: "First-Time Customer?",
+      desc: "Enjoy 20% off your first order of premium magic mushrooms, starting here.",
+      stat: "20% Welcome Discount"
+    },
+    {
+      icon: Shuffle,
+      title: "Bundle & Save",
+      desc: "Curated mushroom combos — mix strains, capsules & edibles at up to 30% off.",
+      stat: "Up to 30% Off Bundles"
+    },
+    {
+      icon: Calendar,
+      title: "Daily Dose Discount",
+      desc: "Subscribe & save 25% on your monthly microdose essentials. Cancel anytime.",
+      stat: "25% Subscribe & Save"
+    },
+    {
       icon: Truck,
-      title: "Discreet Shipping",
-      desc: "Free Xpresspost delivery on orders over $150 across Canada.",
-      stat: "Xpresspost Delivery"
-    },
-    {
-      icon: RotateCcw,
-      title: "Quality Assured",
-      desc: "100% organic, lab-tested, premium quality standards.",
-      stat: "Lab Tested Certified"
-    },
-    {
-      icon: ShieldCheck,
-      title: "Secure Ordering",
-      desc: "Encrypted transactions and highly secure packaging.",
-      stat: "SSL Secure Encrypted"
-    },
-    {
-      icon: Headphones,
-      title: "Expert Support",
-      desc: "Dedicated specialists to guide your journey 24/7.",
-      stat: "Response Under 3m"
+      title: "Free Shipping Canada-Wide",
+      desc: "On all orders over $150. Delivered discreetly and securely to your door.",
+      stat: "Free on Orders $150+"
     }
   ]
 
@@ -929,19 +924,15 @@ export default function Home() {
     }
   ]
 
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveReview((prev) => (prev + 1) % reviews.length)
-    }, 3000)
-    return () => clearInterval(timer)
-  }, [reviews.length])
+  // Removed auto-play for testimonials as requested
 
   useEffect(() => {
     const timer = setInterval(() => {
+      setBlogDirection(1)
       setActiveBlog((prev) => (prev + 1) % blogPosts.length)
-    }, 3000)
+    }, 5000)
     return () => clearInterval(timer)
-  }, [blogPosts.length])
+  }, [blogPosts.length, blogTimerKey])
 
   // Premium mushroom showroom items
   const tabShowroomProducts = {
@@ -1278,7 +1269,7 @@ export default function Home() {
               />
             </motion.span>
             <h2 className="text-zinc-900 font-black text-3xl md:text-4xl uppercase tracking-tight">
-              Premium Offers
+              Premium Shroom Offers
             </h2>
           </motion.div>
 
@@ -1312,54 +1303,39 @@ export default function Home() {
         <div className="absolute bottom-1/4 right-1/4 w-[350px] h-[350px] rounded-full bg-orange-500/5 blur-[120px] pointer-events-none z-0" />
 
         <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-10">
-          {/* Tab Selection Bar */}
-          <div className="flex justify-center md:justify-start gap-8 mb-8 border-b border-zinc-800 pb-2 relative">
-            {[
-              { id: 'best-selling', name: 'BEST SELLING' },
-              { id: 'featured', name: 'FEATURED' },
-              { id: 'on-sale', name: 'ON SALE' }
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`relative pb-3 text-xs md:text-sm font-black font-display tracking-widest transition-colors duration-300 uppercase ${activeTab === tab.id ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'
-                  }`}
-              >
-                {tab.name}
-                {activeTab === tab.id && (
-                  <motion.div
-                    layoutId="activeTabUnderline"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#FA0C83]"
-                    transition={{ type: 'spring', stiffness: 380, damping: 30 }}
-                  />
-                )}
-              </button>
-            ))}
+          {/* Section Heading */}
+          <div className="flex items-center justify-between border-b border-zinc-800 pb-4 mb-8">
+            <h2 className="text-white font-black text-xl md:text-2xl uppercase tracking-tight">
+              Best Selling Magic Mushrooms
+            </h2>
+            <button
+              onClick={handleShopNowClick}
+              className="flex items-center gap-1.5 text-zinc-400 hover:text-[#FA0C83] text-xs font-bold uppercase tracking-widest transition-colors duration-300 cursor-pointer group"
+            >
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+              View Products
+            </button>
           </div>
 
-          {/* Dynamic Products Grid */}
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeTab}
-              variants={containerVariants}
-              initial="hidden"
-              whileInView="show"
-              exit="exit"
-              viewport={{ once: true, margin: '-60px' }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
-            >
-              {tabShowroomProducts[activeTab].map((product, idx) => (
-                <ShowroomProductCard
-                  key={product.id}
-                  product={product}
-                  index={idx}
-                  handleAddToCart={handleAddToCart}
-                  handleAddToWishlist={handleAddToWishlist}
-                  variants={cardVariants}
-                />
-              ))}
-            </motion.div>
-          </AnimatePresence>
+          {/* Products Grid */}
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: '-60px' }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
+          >
+            {tabShowroomProducts['best-selling'].map((product, idx) => (
+              <ShowroomProductCard
+                key={product.id}
+                product={product}
+                index={idx}
+                handleAddToCart={handleAddToCart}
+                handleAddToWishlist={handleAddToWishlist}
+                variants={cardVariants}
+              />
+            ))}
+          </motion.div>
         </div>
       </section>
 
@@ -1417,232 +1393,79 @@ export default function Home() {
         </svg>
       </div>
 
-      {/* TESTIMONIALS SECTION (Dark Mode) */}
-      <section className="w-full py-12 bg-[#111113] z-10 select-none relative overflow-hidden">
-        {/* Decorative background glows */}
-        <div className="absolute top-1/4 left-[5%] w-[450px] h-[450px] rounded-full bg-[#FA0C83]/5 blur-[130px] pointer-events-none" />
-        <div className="absolute bottom-1/4 right-[5%] w-[450px] h-[450px] rounded-full bg-[#01CBDF]/5 blur-[130px] pointer-events-none" />
-        <div className="absolute inset-0 pointer-events-none opacity-[0.02]"
-          style={{ backgroundImage: 'radial-gradient(circle, #fff 1px, transparent 1px)', backgroundSize: '36px 36px' }} />
-
+      {/* TESTIMONIALS SECTION (Redesigned matching image style with theme elements) */}
+      <section
+        className="w-full py-20 bg-[#111113] z-10 select-none relative overflow-hidden"
+        style={{
+          backgroundImage: `linear-gradient(to right, rgba(250, 12, 131, 0.85), rgba(1, 203, 223, 0.85)), url(${customerbg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
         <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-20">
           {/* Section Heading */}
-          <div className="flex flex-col items-center text-center pb-6 mb-8">
-            <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.25em] text-[#01CBDF] mb-3">
-              <span className="w-5 h-[1.5px] bg-[#01CBDF] inline-block" />
-              Verified Reviews
-              <span className="w-5 h-[1.5px] bg-[#01CBDF] inline-block" />
-            </span>
-            <h2 className="text-3xl md:text-5xl font-black font-display text-white mt-2 tracking-tight uppercase">
+          <div className="flex flex-col items-center text-center pb-12 mb-5">
+            <h2 className="text-2xl md:text-3xl font-bold font-sans text-white tracking-wide uppercase">
               OUR CUSTOMER SAYS
             </h2>
-            <p className="text-zinc-500 text-xs md:text-sm mt-3 max-w-md">
-              Real feedback from our Canadian community of psychonauts and wellness seekers.
-            </p>
+            <span className="w-16 h-1 bg-gradient-to-r from-[#FA0C83] to-[#01CBDF] mt-4 inline-block rounded-full" />
           </div>
 
-          {/* Testimonial Carousel Card */}
-          <div className="max-w-5xl mx-auto relative min-h-[300px] flex items-center justify-center">
-            {/* Split Grid */}
-            <div className="w-full bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-700/80 p-6 sm:p-8 rounded-3xl shadow-2xl relative grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
-              
-              {/* Left Column: Clockwise Avatar Carousel Orbit */}
-              <div className="md:col-span-5 flex flex-col items-center justify-center relative py-4 select-none">
-                <div className="absolute w-60 h-60 rounded-full border border-zinc-800/30 pointer-events-none" />
-                
-                <div className="relative w-72 h-40 flex items-center justify-center">
-                  {reviews.map((rev, idx) => {
-                    let diff = idx - activeReview
-                    if (diff < -1) diff += reviews.length
-                    if (diff > 1) diff -= reviews.length
-
-                    if (Math.abs(diff) > 1) return null
-
-                    const isActive = idx === activeReview
-                    const isLeft = diff === -1 || (activeReview === 0 && idx === reviews.length - 1)
-                    const isRight = diff === 1 || (activeReview === reviews.length - 1 && idx === 0)
-
-                    let xOffset = 0
-                    let yOffset = 0
-                    let scale = 1
-                    let zIndex = 10
-                    let opacity = 1
-
-                    if (isActive) {
-                      xOffset = 0
-                      yOffset = -10
-                      scale = 1.25
-                      zIndex = 30
-                      opacity = 1
-                    } else if (isLeft) {
-                      xOffset = -80
-                      yOffset = 10
-                      scale = 0.8
-                      zIndex = 20
-                      opacity = 0.35
-                    } else if (isRight) {
-                      xOffset = 80
-                      yOffset = 10
-                      scale = 0.8
-                      zIndex = 20
-                      opacity = 0.35
-                    }
-
-                    return (
-                      <motion.div
-                        key={idx}
-                        layout
-                        animate={{
-                          x: xOffset,
-                          y: yOffset,
-                          scale: scale,
-                          opacity: opacity,
-                          zIndex: zIndex
-                        }}
-                        transition={{ duration: 0.4, ease: [0.10, 1, 0.3, 1] }}
-                        onClick={() => setActiveReview(idx)}
-                        className="absolute cursor-pointer flex flex-col items-center group/avatar"
-                      >
-                        <div 
-                          className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full p-1 shadow-2xl transition-all duration-300"
-                          style={{
-                            background: isActive 
-                              ? 'linear-gradient(135deg, #FA0C83, #01CBDF)' 
-                              : 'linear-gradient(135deg, rgba(63,63,70,0.4), rgba(39,39,42,0.4))'
-                          }}
-                        >
-                          <img
-                            src={rev.avatar}
-                            alt={rev.name}
-                            className="w-full h-full object-cover rounded-full"
-                          />
-
-                          {/* Orbit dashed rotating rings */}
-                          {isActive && (
-                            <>
-                              <motion.div
-                                animate={{ rotate: 360 }}
-                                transition={{ duration: 15, repeat: Infinity, ease: "linear" }}
-                                className="absolute -inset-2 rounded-full border border-dashed border-[#FA0C83]/70"
-                              />
-                              <motion.div
-                                animate={{ rotate: -360 }}
-                                transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-                                className="absolute -inset-3 rounded-full border border-dashed border-[#01CBDF]/50"
-                              />
-                              
-                              <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-gradient-to-r from-[#FA0C83] to-[#01CBDF] text-[8px] font-black text-white px-2.5 py-0.5 rounded-full uppercase tracking-widest whitespace-nowrap shadow-lg">
-                                Verified
-                              </span>
-                            </>
-                          )}
-                        </div>
-                        {isActive && (
-                          <motion.div 
-                            initial={{ opacity: 0, y: 5 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="text-center mt-3"
-                          >
-                            <p className="text-[9px] text-[#01CBDF] font-extrabold uppercase tracking-widest bg-[#01CBDF]/10 px-2 py-0.5 rounded-full border border-[#01CBDF]/20">
-                              {rev.product}
-                            </p>
-                          </motion.div>
-                        )}
-                      </motion.div>
-                    )
-                  })}
+          {/* Testimonial Content */}
+          <div className="max-w-4xl mx-auto relative min-h-[300px] flex flex-col items-center justify-center">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeReview}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+                className="flex flex-col items-center text-center w-full"
+              >
+                <div className="flex items-start justify-center gap-2 mb-10 max-w-3xl px-4">
+                  <span className="text-4xl text-white font-serif leading-none mt-1">“</span>
+                  <p className="text-white text-base md:text-lg font-medium leading-relaxed">
+                    {reviews[activeReview].text}
+                  </p>
+                  <span className="text-4xl text-white font-serif leading-none mt-auto transform rotate-180 translate-y-2">“</span>
                 </div>
-              </div>
 
-              {/* Right Column: Review Text / Details */}
-              <div className="md:col-span-7 flex flex-col text-left relative min-h-[220px]">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activeReview}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.4, ease: [0.10, 1, 0.3, 1] }}
-                    className="flex flex-col h-full justify-between"
-                  >
-                    <div>
-                      <span className="absolute -top-12 -left-6 text-[9rem] font-serif text-[#FA0C83]/5 pointer-events-none select-none">“</span>
-                      
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4 relative z-10">
-                        <div className="flex gap-1">
-                          {[...Array(reviews[activeReview].rating)].map((_, i) => (
-                            <Star key={i} className="w-4 h-4 fill-current text-yellow-400 drop-shadow-[0_0_6px_rgba(250,204,21,0.4)]" />
-                          ))}
-                        </div>
-                        <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider">
-                          {reviews[activeReview].date}
-                        </span>
-                      </div>
+                {/* Avatar */}
+                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full p-1 bg-white/20 shadow-xl mb-4">
+                  <img
+                    src={reviews[activeReview].avatar}
+                    alt={reviews[activeReview].name}
+                    className="w-full h-full object-cover rounded-full"
+                  />
+                </div>
 
-                      <p className="text-zinc-200 text-sm sm:text-base font-medium leading-relaxed italic mb-6 relative z-10 max-w-xl">
-                        "{reviews[activeReview].text}"
-                      </p>
-                    </div>
+                {/* Name & Role */}
+                <div className="flex items-center justify-center gap-2 text-white mb-2">
+                  <h4 className="font-bold text-sm md:text-base">{reviews[activeReview].name}</h4>
+                  <span className="text-white/80">-</span>
+                  <span className="text-xs md:text-sm font-medium text-white/90">Customer</span>
+                </div>
 
-                    <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-zinc-800/80">
-                      <div>
-                        <h4 className="font-display font-black text-sm text-white uppercase tracking-wider flex items-center gap-2">
-                          {reviews[activeReview].name}
-                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-ping" />
-                        </h4>
-                        <span className="text-[9px] text-zinc-500 font-bold uppercase tracking-widest mt-0.5 block">
-                          {reviews[activeReview].location}
-                        </span>
-                      </div>
+                {/* Stars */}
+                <div className="flex justify-center gap-1 mb-8">
+                  {[...Array(reviews[activeReview].rating)].map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-current text-yellow-400" />
+                  ))}
+                </div>
+              </motion.div>
+            </AnimatePresence>
 
-                      <div className="flex items-center gap-3">
-                        <button 
-                          onClick={() => handleHelpfulClick(activeReview)}
-                          className={`flex items-center gap-1.5 text-[10px] font-black uppercase tracking-wider py-1.5 px-3 rounded-lg border transition-all cursor-pointer ${
-                            helpfulStates[activeReview] 
-                              ? 'bg-[#FA0C83]/15 border-[#FA0C83] text-[#FA0C83] shadow-md shadow-[#FA0C83]/5' 
-                              : 'bg-zinc-950/40 border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-700'
-                          }`}
-                        >
-                          <span>Helpful?</span>
-                          <span>({helpfulCounts[activeReview]})</span>
-                        </button>
-                      </div>
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-
+            {/* Dots */}
+            <div className="flex justify-center gap-3 mt-4">
+              {reviews.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setActiveReview(idx)}
+                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer ${activeReview === idx ? 'w-6 bg-white' : 'bg-white/50 hover:bg-white/80'}`}
+                />
+              ))}
             </div>
-
-            {/* Left navigation button */}
-            <button
-              onClick={() => setActiveReview((prev) => (prev === 0 ? reviews.length - 1 : prev - 1))}
-              className="absolute -left-4 lg:-left-20 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-zinc-800 bg-zinc-950/90 text-zinc-400 hover:text-white flex items-center justify-center transition-all cursor-pointer hover:shadow-[0_0_20px_rgba(1,203,223,0.4)] hover:border-[#01CBDF] hover:scale-105 active:scale-95 group"
-            >
-              <ChevronLeft className="w-6 h-6 group-hover:-translate-x-0.5 transition-transform" />
-            </button>
-
-            {/* Right navigation button */}
-            <button
-              onClick={() => setActiveReview((prev) => (prev === reviews.length - 1 ? 0 : prev + 1))}
-              className="absolute -right-4 lg:-right-20 top-1/2 -translate-y-1/2 z-30 w-12 h-12 rounded-full border border-zinc-800 bg-zinc-950/90 text-zinc-400 hover:text-white flex items-center justify-center transition-all cursor-pointer hover:shadow-[0_0_20px_rgba(250,12,131,0.4)] hover:border-[#FA0C83] hover:scale-105 active:scale-95 group"
-            >
-              <ChevronRight className="w-6 h-6 group-hover:translate-x-0.5 transition-transform" />
-            </button>
-          </div>
-
-          {/* Dots */}
-          <div className="flex justify-center gap-2 mt-10">
-            {reviews.map((_, idx) => (
-              <motion.button
-                key={idx}
-                onClick={() => setActiveReview(idx)}
-                animate={{ width: activeReview === idx ? 32 : 8, background: activeReview === idx ? '#FA0C83' : '#3f3f46' }}
-                transition={{ duration: 0.3 }}
-                className="h-2 rounded-full cursor-pointer"
-              />
-            ))}
           </div>
         </div>
       </section>
@@ -1706,7 +1529,7 @@ export default function Home() {
                     e.currentTarget.style.setProperty('--mouse-x', `${x}px`)
                     e.currentTarget.style.setProperty('--mouse-y', `${y}px`)
                   }}
-                  className="group relative bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800/80 p-8 rounded-3xl flex flex-col items-center text-center transition-all duration-500 overflow-hidden cursor-default shadow-lg hover:shadow-2xl hover:border-transparent"
+                  className="group relative bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800/80 p-5 rounded-2xl flex flex-col items-center text-center transition-all duration-500 overflow-hidden cursor-default shadow-lg hover:shadow-2xl hover:border-transparent"
                 >
                   {/* Spotlight Cursor Glow Effect */}
                   <div
@@ -1721,8 +1544,8 @@ export default function Home() {
                   />
 
                   {/* Floating particle background glow on hover */}
-                  <div 
-                    className="absolute -top-12 -right-12 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-20 transition-all duration-500 pointer-events-none" 
+                  <div
+                    className="absolute -top-12 -right-12 w-24 h-24 rounded-full blur-2xl opacity-0 group-hover:opacity-20 transition-all duration-500 pointer-events-none"
                     style={{ backgroundColor: featColor }}
                   />
 
@@ -1743,19 +1566,19 @@ export default function Home() {
                     >
                       <feat.icon className="w-7 h-7" />
                     </motion.div>
-                    
+
                     {/* Ring glow behind icon on hover */}
-                    <div 
+                    <div
                       className="absolute inset-0 rounded-2xl blur-md opacity-0 group-hover:opacity-40 transition-all duration-300 pointer-events-none"
                       style={{ backgroundColor: featColor }}
                     />
                   </div>
 
                   {/* Micro-Highlight stat tag */}
-                  <span 
-                    className="text-[9px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-4 inline-block relative z-10 border transition-all duration-300"
-                    style={{ 
-                      color: featColor, 
+                  <span
+                    className="text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full mb-2 inline-block relative z-10 border transition-all duration-300"
+                    style={{
+                      color: featColor,
                       backgroundColor: `${featColor}08`,
                       borderColor: `${featColor}15`
                     }}
@@ -1771,7 +1594,7 @@ export default function Home() {
                   </p>
 
                   {/* Bottom animated bar */}
-                  <div 
+                  <div
                     className="absolute bottom-0 left-1/2 -translate-x-1/2 w-0 group-hover:w-1/2 h-[3px] rounded-t-full transition-all duration-500"
                     style={{ backgroundColor: featColor }}
                   />
@@ -1814,7 +1637,7 @@ export default function Home() {
               </span>
               <h2 className="text-3xl md:text-4xl font-black text-zinc-900 uppercase tracking-tight">Latest News & Blogs</h2>
             </div>
-            
+
             <motion.button
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
@@ -1828,8 +1651,8 @@ export default function Home() {
           {/* Sliding Blog Cards Container with 3D Slider perspective */}
           <div className="relative px-4 sm:px-10">
 
-            <div 
-              style={{ perspective: 1200 }} 
+            <div
+              style={{ perspective: 1200 }}
               className="relative w-full h-[500px] flex items-center justify-center overflow-visible select-none mt-4"
             >
               {blogPosts.map((post, idx) => {
@@ -1844,7 +1667,7 @@ export default function Home() {
                 const isTablet = windowWidth >= 640 && windowWidth < 1024
 
                 const stepX = isMobile ? 120 : isTablet ? 220 : 340
-                
+
                 let xOffset = diff * stepX
                 let zOffset = -150
                 let rotateY = diff === 0 ? 0 : diff < 0 ? 45 : -45
@@ -1893,7 +1716,10 @@ export default function Home() {
                       opacity: opacity,
                       zIndex: zIndex
                     }}
-                    transition={{ duration: 0.4, ease: [0.10, 1, 0.3, 1] }}
+                    transition={{
+                      duration: 1.5,
+                      ease: [0.16, 1, 0.3, 1]
+                    }}
                     whileHover={diff === 0 ? { y: -10 } : {}}
                     onClick={() => {
                       if (diff !== 0) {
@@ -1980,6 +1806,7 @@ export default function Home() {
                 onClick={() => {
                   setBlogDirection(-1)
                   setActiveBlog((prev) => (prev === 0 ? blogPosts.length - 1 : prev - 1))
+                  setBlogTimerKey((k) => k + 1)
                 }}
                 className="w-11 h-11 rounded-full border border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white hover:border-zinc-700 hover:bg-zinc-900 flex items-center justify-center transition-all cursor-pointer shadow-lg active:scale-95 group"
               >
@@ -1993,10 +1820,10 @@ export default function Home() {
                     onClick={() => {
                       setBlogDirection(i > activeBlog ? 1 : -1)
                       setActiveBlog(i)
+                      setBlogTimerKey((k) => k + 1)
                     }}
-                    className={`h-2 rounded-full transition-all duration-300 ${
-                      i === activeBlog ? 'w-6 bg-[#FA0C83]' : 'w-2 bg-zinc-700 hover:bg-zinc-500'
-                    }`}
+                    className={`h-2 rounded-full transition-all duration-300 ${i === activeBlog ? 'w-6 bg-[#FA0C83]' : 'w-2 bg-zinc-700 hover:bg-zinc-500'
+                      }`}
                   />
                 ))}
               </div>
@@ -2005,6 +1832,7 @@ export default function Home() {
                 onClick={() => {
                   setBlogDirection(1)
                   setActiveBlog((prev) => (prev + 1) % blogPosts.length)
+                  setBlogTimerKey((k) => k + 1)
                 }}
                 className="w-11 h-11 rounded-full border border-zinc-800 bg-zinc-950 text-zinc-400 hover:text-white hover:border-zinc-700 hover:bg-zinc-900 flex items-center justify-center transition-all cursor-pointer shadow-lg active:scale-95 group"
               >
