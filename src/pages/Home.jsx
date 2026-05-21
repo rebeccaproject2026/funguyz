@@ -4,8 +4,9 @@
 import { useState, useRef, useEffect } from 'react'
 import { useOutletContext } from 'react-router-dom'
 import { motion, AnimatePresence, useMotionValue, useSpring, useAnimationFrame } from 'framer-motion'
-import { Star, ArrowRight, Sparkles, Shuffle, ZoomIn, Truck, Calendar, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Star, ArrowRight, Sparkles, Shuffle, ZoomIn, Truck, Calendar, ChevronLeft, ChevronRight, MapPin } from 'lucide-react'
 import Hero from '../components/Hero'
+import ShippingModal from '../components/ShippingModal'
 
 // Import user-uploaded luxury mushroom assets
 import main5 from '../assets/main5.jpg'
@@ -807,6 +808,7 @@ export default function Home() {
   const [blogDirection, setBlogDirection] = useState(1)
   const [blogTimerKey, setBlogTimerKey] = useState(0)
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
+  const [isShippingModalOpen, setIsShippingModalOpen] = useState(false)
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth)
@@ -1605,21 +1607,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WAVY DIVIDER 5: Service Features (Light) to Blog (Light) */}
+      {/* WAVY DIVIDER 5: Service Features (Light) to Blog (Dark) */}
       <div className="w-full overflow-hidden leading-[0] bg-[#f4f4f6] pointer-events-none relative z-10 -mb-1">
         <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[40px] sm:h-[60px] md:h-[90px]">
           <path d="M0,70 C300,30 650,110 900,50 C1050,20 1150,60 1200,75 L1200,120 L0,120 Z" fill="#FA0C83" opacity="0.1" />
           <path d="M0,80 C250,40 600,100 850,40 C1000,10 1120,50 1200,65 L1200,120 L0,120 Z" fill="#01CBDF" opacity="0.08" />
-          <path d="M0,90 C200,50 500,90 800,50 C950,30 1100,70 1200,60 L1200,120 L0,120 Z" fill="#ffffff" />
+          <path d="M0,90 C200,50 500,90 800,50 C950,30 1100,70 1200,60 L1200,120 L0,120 Z" fill="#111113" />
         </svg>
       </div>
 
-      {/* LATEST NEWS / BLOG SECTION (Light Mode Slider) */}
-      <section className="w-full py-12 bg-white z-10 select-none relative overflow-hidden">
+      {/* LATEST NEWS / BLOG SECTION (Dark Mode Slider) */}
+      <section className="w-full py-12 bg-[#111113] z-10 select-none relative overflow-hidden">
         {/* Subtle bg texture */}
-        <div className="absolute inset-0 pointer-events-none opacity-[0.025]"
-          style={{ backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[#FA0C83]/[0.03] blur-[140px] pointer-events-none" />
+        <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
+          style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[#FA0C83]/[0.05] blur-[140px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-10">
           {/* Heading */}
@@ -1628,21 +1630,21 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-col sm:flex-row items-center justify-between border-b border-zinc-100 pb-8 mb-8 gap-4"
+            className="flex flex-col sm:flex-row items-center justify-between border-b border-zinc-800/80 pb-8 mb-8 gap-4"
           >
             <div>
               <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.25em] text-[#FA0C83] mb-2">
                 <span className="w-5 h-[1.5px] bg-[#FA0C83] inline-block" />
                 Shroom Knowledge
               </span>
-              <h2 className="text-3xl md:text-4xl font-black text-zinc-900 uppercase tracking-tight">Latest News & Blogs</h2>
+              <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight">Latest News & Blogs</h2>
             </div>
 
             <motion.button
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.97 }}
               onClick={() => alert('Redirecting to blog pages...')}
-              className="flex items-center gap-2 px-6 py-3 bg-zinc-900 hover:bg-[#FA0C83] text-white text-[10px] font-black uppercase tracking-widest rounded-full transition-colors duration-300 cursor-pointer"
+              className="flex items-center gap-2 px-6 py-3 bg-white hover:bg-[#FA0C83] text-zinc-900 hover:text-white text-[10px] font-black uppercase tracking-widest rounded-full transition-colors duration-300 cursor-pointer shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(250,12,131,0.3)]"
             >
               Read All Articles <ArrowRight className="w-3.5 h-3.5" />
             </motion.button>
@@ -1727,7 +1729,7 @@ export default function Home() {
                         setActiveBlog(originalIdx)
                       }
                     }}
-                    className="absolute w-[290px] sm:w-[330px] md:w-[350px] bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800/80 rounded-3xl overflow-hidden flex flex-col cursor-pointer transition-colors duration-300 hover:border-zinc-700/60"
+                    className="absolute w-[290px] sm:w-[330px] md:w-[350px] bg-white border border-zinc-100 rounded-3xl overflow-hidden flex flex-col cursor-pointer transition-colors duration-300 hover:border-zinc-200"
                   >
                     {/* Image */}
                     <div className="relative h-44 sm:h-48 overflow-hidden select-none pointer-events-none">
@@ -1757,21 +1759,21 @@ export default function Home() {
                     {/* Content */}
                     <div className="p-5 sm:p-6 flex flex-col flex-1">
                       {/* Date */}
-                      <div className="flex items-center gap-1.5 text-[10px] text-zinc-400 font-bold uppercase tracking-wider mb-2">
+                      <div className="flex items-center gap-1.5 text-[10px] text-zinc-500 font-bold uppercase tracking-wider mb-2">
                         <Calendar className="w-3 h-3" style={{ color: accentColor }} />
                         {post.date}
                       </div>
 
                       {/* Title */}
-                      <h3 className="font-black text-sm sm:text-base text-white leading-snug mb-2.5 group-hover:text-[#FA0C83] transition-colors duration-300">
+                      <h3 className="font-black text-sm sm:text-base text-zinc-900 leading-snug mb-2.5 group-hover:text-[#FA0C83] transition-colors duration-300">
                         {post.title}
                       </h3>
 
                       {/* Desc */}
-                      <p className="text-zinc-400 text-[11px] sm:text-xs leading-relaxed mb-4 flex-1 line-clamp-2 sm:line-clamp-none">{post.desc}</p>
+                      <p className="text-zinc-500 text-[11px] sm:text-xs leading-relaxed mb-4 flex-1 line-clamp-2 sm:line-clamp-none">{post.desc}</p>
 
                       {/* Author row + CTA */}
-                      <div className="flex items-center justify-between pt-3.5 border-t border-zinc-800/80">
+                      <div className="flex items-center justify-between pt-3.5 border-t border-zinc-100">
                         {/* Author with avatar */}
                         <div className="flex items-center gap-2.5">
                           <div
@@ -1781,7 +1783,7 @@ export default function Home() {
                             {avatarInitials}
                           </div>
                           <div>
-                            <p className="text-[9px] font-black text-white uppercase tracking-wide leading-tight">{post.author}</p>
+                            <p className="text-[9px] font-black text-zinc-900 uppercase tracking-wide leading-tight">{post.author}</p>
                             <p className="text-[8px] text-zinc-500 font-semibold leading-tight">Author</p>
                           </div>
                         </div>
@@ -1843,14 +1845,86 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WAVY DIVIDER: Blog to Footer */}
-      <div className="w-full overflow-hidden leading-[0] bg-white pointer-events-none relative z-10 -mb-1">
+      {/* WAVY DIVIDER: Blog (Dark) to Service Areas (Light) */}
+      <div className="w-full overflow-hidden leading-[0] bg-[#111113] pointer-events-none relative z-10 -mb-1">
         <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[40px] sm:h-[60px] md:h-[80px]">
           <path d="M0,60 C350,20 650,110 950,50 C1080,20 1150,60 1200,75 L1200,120 L0,120 Z" fill="#FA0C83" opacity="0.12" />
           <path d="M0,75 C300,35 600,100 900,45 C1050,15 1120,55 1200,65 L1200,120 L0,120 Z" fill="#01CBDF" opacity="0.1" />
-          <path d="M0,88 C250,55 550,95 850,55 C1000,35 1100,70 1200,62 L1200,120 L0,120 Z" fill="#111113" />
+          <path d="M0,88 C250,55 550,95 850,55 C1000,35 1100,70 1200,62 L1200,120 L0,120 Z" fill="#fafafa" />
         </svg>
       </div>
+
+      {/* LOCATIONS / SERVICE AREAS SECTION */}
+      <section className="w-full py-12 bg-[#fafafa] z-10 relative overflow-hidden">
+        <div className="absolute top-1/4 left-[5%] w-[400px] h-[400px] rounded-full bg-[#FA0C83]/5 blur-[120px] pointer-events-none" />
+        <div className="absolute bottom-1/4 right-[5%] w-[400px] h-[400px] rounded-full bg-[#01CBDF]/5 blur-[120px] pointer-events-none" />
+        
+        {/* Abstract Map Nodes Texture */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
+          style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(0,0,0,0.8) 1px, transparent 0)', backgroundSize: '48px 48px' }} />
+
+        <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-10">
+          <div className="text-center mb-10">
+            <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.25em] text-[#FA0C83] mb-3">
+              <span className="w-5 h-[1.5px] bg-[#FA0C83] inline-block" />
+              Service Areas
+              <span className="w-5 h-[1.5px] bg-[#FA0C83] inline-block" />
+            </span>
+            <h2 className="text-3xl md:text-5xl font-black text-zinc-900 uppercase tracking-tight">Where We Provide Services</h2>
+            <p className="text-zinc-500 text-sm md:text-base mt-4 max-w-lg mx-auto">
+              We bring the highest quality mushroom products directly to your doorstep. Currently serving major metropolitan areas and expanding rapidly.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { city: 'Vancouver', province: 'British Columbia', status: 'Same-Day Delivery' },
+              { city: 'Toronto', province: 'Ontario', status: '2-Day Shipping' },
+              { city: 'Montreal', province: 'Quebec', status: '2-Day Shipping' },
+              { city: 'Calgary', province: 'Alberta', status: 'Express Delivery' },
+            ].map((loc, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                whileHover={{ y: -8 }}
+                className="group relative bg-white border border-zinc-100 p-6 rounded-3xl overflow-hidden hover:border-[#FA0C83]/30 hover:shadow-xl transition-all duration-300 cursor-default"
+              >
+                {/* Glow on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-[#FA0C83]/0 to-[#01CBDF]/0 group-hover:from-[#FA0C83]/5 group-hover:to-[#01CBDF]/5 transition-colors duration-500" />
+                
+                <div className="w-12 h-12 rounded-2xl bg-zinc-50 border border-zinc-100 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 group-hover:shadow-[0_0_25px_rgba(250,12,131,0.15)] group-hover:border-[#FA0C83]/20">
+                  <MapPin className="w-5 h-5 text-[#FA0C83]" />
+                </div>
+                
+                <h3 className="text-xl font-black text-zinc-900 uppercase tracking-wider mb-1">{loc.city}</h3>
+                <p className="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-5">{loc.province}</p>
+                
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#01CBDF]/10 border border-[#01CBDF]/20 text-[#01CBDF] text-[9px] font-black uppercase tracking-widest">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#01CBDF] animate-pulse" />
+                  {loc.status}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          <div className="mt-10 flex flex-col items-center">
+            <p className="text-zinc-500 text-xs mb-4 uppercase tracking-widest font-semibold">Not in these areas?</p>
+            <motion.button
+              onClick={() => setIsShippingModalOpen(true)}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              className="px-8 py-3.5 rounded-full bg-zinc-900 text-white text-[11px] font-black uppercase tracking-widest hover:bg-[#01CBDF] transition-colors duration-300 shadow-[0_4px_14px_rgba(0,0,0,0.1)] hover:shadow-[0_0_30px_rgba(1,203,223,0.3)] cursor-pointer"
+            >
+              Check Nationwide Shipping
+            </motion.button>
+          </div>
+        </div>
+      </section>
+
+
 
       {/* CONTACT US SECTION (Commented Out for Now) */}
       {/*
@@ -1912,6 +1986,11 @@ export default function Home() {
           </div>
         </div>
       */}
+
+      <ShippingModal 
+        isOpen={isShippingModalOpen} 
+        onClose={() => setIsShippingModalOpen(false)} 
+      />
     </>
   )
 }

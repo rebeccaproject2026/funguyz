@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import AnnouncementTicker from './AnnouncementTicker'
 import Header from './Header'
 import Footer from './Footer'
@@ -7,19 +7,22 @@ import CartDrawer from './CartDrawer'
 import LoginDrawer from './LoginDrawer'
 import AddedToBagToast from './AddedToBagToast'
 import Lenis from 'lenis'
+import { useCart } from '../context/CartContext'
 
 import main5 from '../assets/main5.jpg'
-import main7 from '../assets/main7.jpg'
 import main1 from '../assets/main1.jpg'
 
 export default function Layout() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
-  const [wishlistCount, setWishlistCount] = useState(2)
+  const { pathname } = useLocation()
 
   // Toast state
   const [toast, setToast] = useState({ visible: false, item: null })
   const toastTimerRef = useRef(null)
+  
+  // Store Lenis instance
+  const lenisRef = useRef(null)
 
   // Initialize Lenis smooth scroll
   useEffect(() => {
@@ -34,6 +37,7 @@ export default function Layout() {
       touchMultiplier: 2,
       infinite: false,
     })
+    lenisRef.current = lenis
 
     function raf(time) {
       lenis.raf(time)
@@ -44,72 +48,34 @@ export default function Layout() {
 
     return () => {
       lenis.destroy()
+      lenisRef.current = null
     }
   }, [])
 
-  // Pre-load cart with two premium reserve mushroom products
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 201,
-      name: 'Golden Teacher Magic Mushrooms (AAA)',
-      price: 49.99,
-      quantity: 1,
-      size: 'Whole',
-      color: 'Signature Red Label',
-      image: main5
-    },
-    {
-      id: 203,
-      name: 'Premium Mind-Focus Microdose Caps',
-      price: 39.99,
-      quantity: 1,
-      size: '30 Caps',
-      color: 'Vegan Cellulose',
-      image: main7
+  // Scroll to top on route change
+  useEffect(() => {
+    if (lenisRef.current) {
+      lenisRef.current.scrollTo(0, { immediate: true })
+    } else {
+      window.scrollTo(0, 0)
     }
-  ])
+  }, [pathname])
 
-  // Calculate stats
-  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0)
-  const cartSubtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+  const {
+    cartItems,
+    cartCount,
+    cartSubtotal,
+    handleAddToCart,
+    handleRemoveItem,
+    handleUpdateQuantity,
+    wishlistCount,
+    handleAddToWishlist
+  } = useCart()
 
-  // Actions
-  const handleRemoveItem = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id))
-  }
-
-  const handleUpdateQuantity = (id, quantity) => {
-    if (quantity <= 0) {
-      handleRemoveItem(id)
-      return
-    }
-    setCartItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, quantity } : item))
-    )
-  }
-
-  const handleAddToCart = (product) => {
-    setCartItems((prev) => {
-      const existing = prev.find((item) => item.id === product.id)
-      if (existing) {
-        return prev.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        )
-      }
-      return [
-        ...prev,
-        {
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          quantity: 1,
-          size: product.size || 'Whole',
-          color: product.color || 'Signature Red',
-          image: product.image
-        }
-      ]
-    })
-
+  // Toast implementation wrapper
+  const handleAddToCartWithToast = (product) => {
+    handleAddToCart(product)
+    
     // Show toast — stays open until manually closed
     const addedItem = {
       id: product.id,
@@ -123,7 +89,7 @@ export default function Layout() {
     setToast({ visible: true, item: addedItem })
   }
 
-  // CTA Shop Now action -> adds the cryogenic reserve shrooms package to cart and slides drawer open!
+  // CTA Shop Now action -> adds the cryogenic reserve shrooms package to cart
   const handleShopNowClick = () => {
     const reservePackage = {
       id: 204,
@@ -133,11 +99,7 @@ export default function Layout() {
       color: 'Premium Reserve',
       image: main1
     }
-    handleAddToCart(reservePackage)
-  }
-
-  const handleAddToWishlist = () => {
-    setWishlistCount((prev) => prev + 1)
+    handleAddToCartWithToast(reservePackage)
   }
 
   return (
@@ -158,7 +120,7 @@ export default function Layout() {
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col">
-        <Outlet context={{ handleShopNowClick, handleAddToCart, handleAddToWishlist }} />
+        <Outlet context={{ handleShopNowClick, handleAddToCart: handleAddToCartWithToast, handleAddToWishlist }} />
       </main>
 
       {/* Footer Banner */}

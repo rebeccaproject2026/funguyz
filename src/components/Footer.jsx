@@ -42,129 +42,53 @@ const RssIcon = () => (
 )
 
 const footerLinks = {
-  INFORMATION: ['About Us', 'Store Location', 'Contact Us', 'Shipping & Delivery', 'Latest News', 'Our Sitemap'],
-  'OUR SERVICE': ['Privacy Policy', 'Terms of Sale', 'Customer Service', 'Delivery Information', 'Payments', 'Saved Cards'],
-  'MY ACCOUNT': ['My Account', 'My Shop', 'My Cart', 'Checkout', 'My Wishlist', 'Tracking Order'],
+  'QUICK ACCESS': ['Shop All', 'About Us', 'Contact Us', 'My Account', 'Track Order', 'Mushroom FAQ'],
+  'KNOWLEDGE HUB': ['What to Expect', 'Mushroom Varieties Guide', 'Dosage & Usage Guide', 'Health Benefits', 'Recipes & Tips'],
+  'SERVICE AREAS': ['Vancouver', 'Toronto', 'Calgary', 'Express 1 Hour Delivery', 'Same Day Delivery'],
 }
 
 const socials = [
-  { icon: FacebookIcon, color: '#1877F2', label: 'Facebook' },
-  { icon: TwitterIcon, color: '#1DA1F2', label: 'Twitter' },
-  { icon: LinkedinIcon, color: '#0A66C2', label: 'LinkedIn' },
+  { icon: FacebookIcon,color: '#E1306C', label: 'Facebook' },
+  { icon: TwitterIcon, color: '#E1306C', label: 'Twitter' },
+  { icon: LinkedinIcon, color: '#E1306C', label: 'LinkedIn' },
   { icon: InstagramIcon, color: '#E1306C', label: 'Instagram' },
-  { icon: YoutubeIcon, color: '#FF0000', label: 'YouTube' },
-  { icon: RssIcon, color: '#f9362d', label: 'RSS' },
 ]
-
-const paymentIcons = ['VISA', 'PayPal', 'Discover', 'MC', 'Maestro', 'Amex']
 
 export default function Footer() {
   const [email, setEmail] = useState('')
 
   return (
-    <footer className="w-full bg-[#111113] text-white select-none relative overflow-hidden border-t border-zinc-900">
+    <footer className="w-full bg-[#111113] text-white select-none relative overflow-visible mt-10">
+      
+      {/* WAVY DIVIDER: Transitions any page background into footer */}
+      <div className="absolute left-0 right-0 bottom-full w-full overflow-hidden leading-[0] bg-transparent pointer-events-none z-20">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[40px] sm:h-[60px] md:h-[80px]">
+          <path d="M0,60 C350,20 650,110 950,50 C1080,20 1150,60 1200,75 L1200,120 L0,120 Z" fill="#FA0C83" opacity="0.12" />
+          <path d="M0,75 C300,35 600,100 900,45 C1050,15 1120,55 1200,65 L1200,120 L0,120 Z" fill="#01CBDF" opacity="0.1" />
+          <path d="M0,88 C250,55 550,95 850,55 C1000,35 1100,70 1200,62 L1200,120 L0,120 Z" fill="#111113" />
+        </svg>
+      </div>
+
       {/* Ambient background glows */}
       <div className="absolute top-0 left-1/4 w-[350px] h-[350px] rounded-full bg-[#FA0C83]/[0.02] blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[350px] h-[350px] rounded-full bg-[#01CBDF]/[0.02] blur-[120px] pointer-events-none" />
 
       {/* ── Main footer grid ── */}
-      <div className="max-w-7xl mx-auto px-4 md:px-12 py-6 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10">
+      <div className="max-w-[90%] mx-auto px-4 md:px-4 py-6 relative z-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
 
           {/* Col 1 — Brand info */}
           <div className="lg:col-span-1 space-y-4">
             <img
               src={funguyzLogo}
               alt="Funguyz Logo"
-              className="h-12 w-auto object-contain mb-2"
+              className="h-18 w-auto object-contain mb-0 -mt-4"
             />
             <p className="text-zinc-400 text-sm leading-relaxed">
               Premium organic mushroom products crafted for your journey. Quality, trust, and discretion — always.
             </p>
-            <div className="space-y-2">
-              {[
-                { icon: MapPin, text: '2046 Shroom St, Vancouver, BC' },
-                { icon: Phone, text: '+1 (576) 245-2470' },
-                { icon: Mail, text: 'info@funguyz.com' },
-                { icon: Clock, text: 'Mon – Fri / 9:00 AM – 6:00 PM' },
-              ].map(({ icon: Icon, text }, i) => (
-                <div key={i} className="flex items-start gap-3 text-zinc-400 hover:text-white text-sm transition-colors duration-200 group">
-                  <Icon className="w-4 h-4 mt-0.5 flex-shrink-0 text-[#FA0C83] group-hover:scale-110 transition-transform duration-200" />
-                  <span>{text}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Cols 2-4 — Link columns */}
-          {Object.entries(footerLinks).map(([heading, links]) => (
-            <div key={heading} className="space-y-3">
-              <h4 className="font-black text-xs uppercase tracking-[0.25em] text-white border-b border-zinc-800/80 pb-2">
-                {heading}
-              </h4>
-              <ul className="space-y-2">
-                {links.map((link) => {
-                  const isContact = link === 'Contact Us';
-                  const isBlog = link === 'Latest News';
-
-                  return (
-                    <li key={link}>
-                      {isContact || isBlog ? (
-                        <Link
-                          to={isContact ? '/contact-us' : '/blog'}
-                          className="text-zinc-400 hover:text-white text-sm font-medium transition-all duration-300 flex items-center gap-2 group relative py-0.5"
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#FA0C83] opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300" />
-                          <span className="group-hover:translate-x-1 transition-transform duration-300">
-                            {link}
-                          </span>
-                        </Link>
-                      ) : (
-                        <a
-                          href={link === 'My Shop' || link === 'Store Location' ? '/#shop' : '/'}
-                          className="text-zinc-400 hover:text-white text-sm font-medium transition-all duration-300 flex items-center gap-2 group relative py-0.5"
-                        >
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#FA0C83] opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300" />
-                          <span className="group-hover:translate-x-1 transition-transform duration-300">
-                            {link}
-                          </span>
-                        </a>
-                      )}
-                    </li>
-                  )
-                })}
-              </ul>
-            </div>
-          ))}
-
-          {/* Col 5 — Newsletter */}
-          <div className="space-y-3">
-            <h4 className="font-black text-xs uppercase tracking-[0.25em] text-white border-b border-zinc-800/80 pb-2">
-              Newsletter
-            </h4>
-            <p className="text-zinc-400 text-sm leading-relaxed">
-              Subscribe to our mailing list to get the new updates!
-            </p>
-            <div className="flex flex-col gap-2">
-              <input
-                type="email"
-                value={email}
-                onChange={e => setEmail(e.target.value)}
-                placeholder="Your email address"
-                className="w-full bg-zinc-900/80 border border-zinc-800 focus:border-[#FA0C83] focus:shadow-[0_0_12px_rgba(250,12,131,0.15)] text-white text-sm placeholder-zinc-600 px-4 py-3 rounded-xl outline-none transition-all duration-300"
-              />
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.97 }}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white text-[11px] font-black uppercase tracking-widest cursor-pointer shadow-lg shadow-[#FA0C83]/10 hover:shadow-[#FA0C83]/20 transition-all duration-300"
-                style={{ background: 'linear-gradient(135deg, #FA0C83, #01CBDF)' }}
-              >
-                Subscribe <ArrowRight className="w-4 h-4" />
-              </motion.button>
-            </div>
-
             {/* Socials */}
-            <div className="pt-1.5">
+            <div className="pt-2">
               <p className="text-[10px] font-black uppercase tracking-widest text-zinc-600 mb-2">Follow Us</p>
               <div className="flex flex-wrap gap-2">
                 {socials.map(({ icon: Icon, color, label }) => (
@@ -184,38 +108,95 @@ export default function Footer() {
               </div>
             </div>
           </div>
+
+          {/* Cols 2-4 — Link columns */}
+          {Object.entries(footerLinks).map(([heading, links], idx, arr) => (
+            <div key={heading} className={`space-y-3 text-left ${idx === 0 ? 'lg:ml-8' : ''} ${idx === arr.length - 1 ? 'lg:mr-8' : ''}`}>
+              <h4 className="font-black text-xs uppercase tracking-[0.25em] text-white border-b border-zinc-800/80 pb-2">
+                {heading}
+              </h4>
+              <ul className="space-y-2">
+                {links.map((link) => {
+                  const isContact = link === 'Contact Us';
+                  const isBlog = link === 'Recipes & Cooking Tips';
+                  const isShop = link === 'Shop All';
+                  const isTrackOrder = link === 'Track Order';
+
+                  return (
+                    <li key={link}>
+                      {isContact || isBlog || isShop || isTrackOrder ? (
+                        <Link
+                          to={isContact ? '/contact-us' : isShop ? '/#shop' : isTrackOrder ? '/track-order' : '/blog'}
+                          className="text-zinc-400 hover:text-white text-sm font-medium transition-all duration-300 flex items-center group relative py-0.5 pl-0"
+                        >
+                          <span className="absolute -left-3.5 w-1.5 h-1.5 rounded-full bg-[#FA0C83] opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300" />
+                          <span className="group-hover:translate-x-1 transition-transform duration-300">
+                            {link}
+                          </span>
+                        </Link>
+                      ) : (
+                        <a
+                          href="/"
+                          className="text-zinc-400 hover:text-white text-sm font-medium transition-all duration-300 flex items-center group relative py-0.5 pl-0"
+                        >
+                          <span className="absolute -left-3.5 w-1.5 h-1.5 rounded-full bg-[#FA0C83] opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300" />
+                          <span className="group-hover:translate-x-1 transition-transform duration-300">
+                            {link}
+                          </span>
+                        </a>
+                      )}
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          ))}
+
+          {/* Col 5 — Newsletter */}
+          <div className="space-y-3 lg:col-span-1">
+            <h4 className="font-black text-xs uppercase tracking-[0.25em] text-white border-b border-zinc-800/80 pb-2">
+              Newsletter
+            </h4>
+            <p className="text-zinc-400 text-sm leading-relaxed">
+              Subscribe to our mailing list to get the new updates!
+            </p>
+            <div className="flex flex-col gap-2">
+              <input
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                placeholder="Your email address"
+                className="w-full bg-zinc-900/80 border border-zinc-700 focus:border-[#FA0C83] focus:shadow-[0_0_12px_rgba(250,12,131,0.15)] text-white text-sm placeholder-zinc-600 px-4 py-3 rounded-xl outline-none transition-all duration-300"
+              />
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.97 }}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl text-white text-[11px] font-black uppercase tracking-widest cursor-pointer shadow-lg shadow-[#FA0C83]/10 hover:shadow-[#FA0C83]/20 transition-all duration-300"
+                style={{ background: 'linear-gradient(135deg, #FA0C83, #01CBDF)' }}
+              >
+                Subscribe <ArrowRight className="w-4 h-4" />
+              </motion.button>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* ── Bottom bar ── */}
       <div className="border-t border-zinc-900 bg-zinc-950/20 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 md:px-12 py-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-zinc-500 text-xs font-bold tracking-wider">
+        <div className="max-w-[90%] mx-auto px-4 md:px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-zinc-500 text-xs font-bold tracking-wider w-full sm:w-1/3 text-left">
             Fun Guyz © 2026 · All Rights Reserved.
           </p>
 
-          {/* Payment icons */}
-          <div className="flex items-center gap-2 flex-wrap justify-center">
-            {paymentIcons.map((name) => (
-              <div
-                key={name}
-                className="h-8 px-3 bg-zinc-900/40 border border-zinc-800/80 rounded-lg flex items-center justify-center text-[10px] font-black text-zinc-400 tracking-wide hover:text-white hover:border-zinc-700 transition-colors duration-200"
-              >
-                {name}
-              </div>
-            ))}
-          </div>
-
-          <div className="flex gap-5 text-xs font-bold text-zinc-500 tracking-wider">
-            <a href="#" className="hover:text-white transition-colors">Terms</a>
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
-            <a href="#" className="hover:text-white transition-colors">Cookies</a>
-          </div>
-        </div>
-        <div className="text-center pb-4">
-          <p className="text-zinc-400 text-xs font-bold tracking-wider">
-            Sourced from <a href="https://www.mushroomexpert.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">MushroomExpert.com</a>
+          <p className="text-zinc-400 text-xs font-bold tracking-wider w-full sm:w-1/3 text-center">
+            Sourced from <a href="https://www.mushroomexpert.com" target="_blank" rel="noopener noreferrer" className="text-[#FA0C83] hover:text-[#01CBDF] transition-colors">MushroomExpert.com</a>
           </p>
+
+          <div className="flex justify-start sm:justify-end gap-5 text-xs font-bold text-zinc-500 tracking-wider w-full sm:w-1/3">
+            <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+            <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-white transition-colors">Compliance</a>
+          </div>
         </div>
       </div>
     </footer>
