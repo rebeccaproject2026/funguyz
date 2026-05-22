@@ -18,8 +18,8 @@ export default function OrderComplete() {
   const deliveryFee = state.deliveryFee || 0;
 
   return (
-    <div className="min-h-screen bg-[#F8F6F6] pt-28 pb-20 text-[#181211]">
-      <div className="max-w-[70%] mx-auto px-4">
+    <div className="min-h-screen bg-[#F8F6F6] pt-28 pb-36 md:pb-20 text-[#181211]">
+      <div className="w-full md:max-w-[85%] lg:max-w-[70%] mx-auto px-4 sm:px-6">
         
         <Stepper currentStep={3} />
 
@@ -76,78 +76,91 @@ export default function OrderComplete() {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
-          className="bg-white rounded-2xl shadow-md overflow-hidden mb-12 text-[#181211]"
+          className="bg-white rounded-3xl border border-zinc-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] overflow-hidden mb-12 text-[#181211]"
         >
-          <div className="bg-[#F8FAFC] border-b border-[#E2E8F0] px-8 py-6 flex justify-between items-center">
-            <div className="flex items-center gap-3">
-              <Package className="text-[var(--color-brand-red)] w-6 h-6" />
-              <h3 className="text-xl font-bold">Order Summary</h3>
-            </div>
-            <span className="text-[#475569] font-medium">{orderItems.length} Items</span>
+          <div className="px-6 py-5 flex justify-between items-center border-b border-zinc-100">
+            <h3 className="text-lg font-bold text-[#0F172A]">Order Summary</h3>
+            <span className="text-[#64748B] text-sm">{orderItems.length} Items</span>
           </div>
 
-          <div className="p-8">
-            <div className="space-y-6 mb-8">
+          <div className="p-6">
+            <div className="space-y-6 mb-6">
               {orderItems.map((item) => (
-                <div key={item.id} className="flex gap-6 items-center">
-                  <div className="w-20 h-20 rounded-xl overflow-hidden bg-zinc-100 flex-shrink-0 border border-[#E2E8F0]">
-                    <img src={item.image} alt={item.name} className="w-full h-full object-cover opacity-90" />
+                <div key={item.id} className="flex gap-4">
+                  <div className="w-16 h-16 rounded-2xl overflow-hidden bg-white border border-zinc-100 flex-shrink-0 flex items-center justify-center p-1">
+                    <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
                   </div>
-                  <div className="flex-1">
-                    <h4 className="font-bold text-lg text-[#0F172A]">{item.name}</h4>
-                    <p className="text-[#475569] text-sm">{item.description} · Qty: {item.quantity}</p>
+                  <div className="flex-1 flex flex-col justify-center py-1">
+                    <h4 className="font-bold text-[15px] text-[#0F172A] leading-tight line-clamp-1">{item.name}</h4>
+                    <p className="text-[#64748B] text-[13px] mt-0.5 line-clamp-1">{item.description} · Qty: {item.quantity}</p>
                   </div>
-                  <div className="font-bold text-[var(--color-brand-red)] text-lg">
+                  <div className="font-bold text-[var(--color-brand-red)] text-[15px] flex items-center">
                     ${(item.price * item.quantity).toFixed(2)}
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="border-t border-[#E2E8F0] pt-6 space-y-4">
-              <div className="flex justify-between text-[#475569]">
+            <div className="border-t border-zinc-100 pt-6 space-y-4">
+              <div className="flex justify-between text-[15px] text-[#475569]">
                 <span>Subtotal</span>
                 <span className="text-[#0F172A] font-bold">${subtotal.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-[#475569]">
+              <div className="flex justify-between text-[15px] text-[#475569]">
                 <span>Estimated Tax</span>
                 <span className="text-[#0F172A] font-bold">${tax.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between text-[#475569]">
+              <div className="flex justify-between text-[15px] text-[#475569]">
                 <span>Delivery Fee</span>
                 <span className={deliveryFee > 0 ? "text-[#0F172A] font-bold" : "text-green-600 font-bold uppercase"}>
                   {deliveryFee > 0 ? `$${deliveryFee.toFixed(2)}` : 'FREE'}
                 </span>
               </div>
               {discount > 0 && (
-                <div className="flex justify-between text-green-600">
+                <div className="flex justify-between text-[15px] text-[#047857]">
                   <span>Discount</span>
                   <span className="font-bold">-${discount.toFixed(2)}</span>
                 </div>
               )}
-              <div className="flex justify-between items-center pt-4 border-t border-[#E2E8F0]">
+              <div className="flex justify-between items-center pt-5 border-t border-zinc-100">
                 <span className="text-xl font-bold text-[#0F172A]">Total Paid</span>
-                <span className="text-3xl font-black text-[var(--color-brand-red)]">${total.toFixed(2)}</span>
+                <span className="text-2xl font-black text-[#0F172A]">${total.toFixed(2)}</span>
               </div>
             </div>
           </div>
         </motion.div>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-4">
+        <div className="hidden md:flex flex-col sm:flex-row justify-center gap-4">
           <button 
             onClick={() => navigate('/track-order', { state })}
-            className="bg-[var(--color-brand-red)] hover:bg-[var(--color-brand-red-hover)] text-white font-bold py-4 px-8 rounded-xl transition-colors cursor-pointer"
+            className="bg-[var(--color-brand-red)] hover:bg-[var(--color-brand-red-hover)] text-white font-bold py-4 px-8 rounded-xl transition-colors cursor-pointer flex items-center gap-2 justify-center"
           >
-            Track Order
+            <MapPin className="w-5 h-5" /> Track My Order
           </button>
           <button 
             onClick={() => navigate('/')}
-            className="bg-transparent border border-[#181211]/20 hover:border-[#181211]/40 text-[#181211] font-bold py-4 px-8 rounded-xl transition-colors cursor-pointer"
+            className="bg-white border-2 border-[var(--color-brand-red)] text-[var(--color-brand-red)] font-bold py-4 px-8 rounded-xl transition-colors cursor-pointer"
           >
             Continue Shopping
           </button>
         </div>
 
+      </div>
+
+      {/* Mobile Sticky Footer Buttons */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-10px_40px_rgba(0,0,0,0.1)] p-4 md:hidden z-50 flex gap-3 border-t border-zinc-200">
+        <button 
+          onClick={() => navigate('/track-order', { state })}
+          className="flex-1 bg-[var(--color-brand-red)] hover:bg-[var(--color-brand-red-hover)] text-white font-bold py-3.5 px-2 rounded-xl flex items-center justify-center gap-2 shadow-sm transition-colors text-sm"
+        >
+          <MapPin className="w-4 h-4" /> Track My Order
+        </button>
+        <button 
+          onClick={() => navigate('/')}
+          className="flex-1 bg-white border border-[var(--color-brand-red)] text-[var(--color-brand-red)] font-bold py-3.5 px-2 rounded-xl flex items-center justify-center shadow-sm transition-colors text-sm"
+        >
+          Continue Shopping
+        </button>
       </div>
     </div>
   );

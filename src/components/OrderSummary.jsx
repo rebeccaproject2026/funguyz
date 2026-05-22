@@ -153,7 +153,7 @@ export default function OrderSummary({
         )}
       </div>
 
-      <div className="border-t border-[#CBD5E1] pt-4 mt-2">
+      <div className="border-t border-[#CBD5E1] pt-4 mt-2 hidden md:block">
         <div className="flex justify-between items-center">
           <span className="text-2xl font-bold text-[#0F172A]">Total</span>
           <div className="flex items-center gap-3">
@@ -168,7 +168,7 @@ export default function OrderSummary({
       </div>
       <button 
         onClick={handleButtonClick}
-        className="w-full bg-[var(--color-brand-red)] hover:bg-[var(--color-brand-red-hover)] text-white font-bold py-3.5 rounded-full transition-all flex items-center justify-center gap-2 cursor-pointer shadow-md mt-1"
+        className="hidden md:flex w-full bg-[var(--color-brand-red)] hover:bg-[var(--color-brand-red-hover)] text-white font-bold py-3.5 rounded-full transition-all items-center justify-center gap-2 cursor-pointer shadow-md mt-1"
       >
         {ButtonIcon && <ButtonIcon className="w-5 h-5" />}
         {buttonText}

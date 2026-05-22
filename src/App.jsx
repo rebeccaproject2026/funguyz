@@ -4,11 +4,12 @@ import Layout from './components/Layout'
 import Home from './pages/Home'
 import Blog from './pages/Blog'
 import Faq from './pages/Faq'
-// import ContactUs from './pages/ContactUs'
+import ContactUs from './pages/ContactUs'
 import Checkout from './pages/Checkout'
 import Cart from './pages/Cart'
 import OrderComplete from './pages/OrderComplete'
 import TrackOrder from './pages/TrackOrder'
+// import About from './pages/About'
 import ScrollToTop from './components/ScrollToTop'
 import { CartProvider } from './context/CartContext'
 
@@ -22,7 +23,8 @@ export default function App() {
             <Route index element={<Home />} />
             <Route path="blog" element={<Blog />} />
             <Route path="faq" element={<Faq />} />
-            {/* <Route path="contact-us" element={<ContactUs />} /> */}
+            {/* <Route path="about" element={<About />} /> */}
+            <Route path="contact-us" element={<ContactUs />} />
             <Route path="cart" element={<Cart />} />
             <Route path="checkout" element={<Checkout />} />
             <Route path="order-complete" element={<OrderComplete />} />

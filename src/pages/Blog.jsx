@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Calendar, User, Clock, ArrowRight, Search, Sparkles, BookOpen, ChevronRight, MessageSquare } from 'lucide-react'
+import { fetchBlogPosts } from '../services/api'
 import main1 from '../assets/main1.jpg'
 import main2 from '../assets/main2.jpg'
 import main3 from '../assets/main3.jpg'
@@ -162,12 +163,23 @@ export default function Blog() {
   const [selectedMonth, setSelectedMonth] = useState('All')
   const [selectedTag, setSelectedTag] = useState('All')
   const [activePost, setActivePost] = useState(null)
+  
+  // API State
+  const [posts, setPosts] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   // Sidebar tab state
   const [activeTab, setActiveTab] = useState('recent')
 
+  useEffect(() => {
+    fetchBlogPosts(BLOG_POSTS).then(data => {
+      setPosts(data)
+      setIsLoading(false)
+    })
+  }, [])
+
   // Filter posts
-  const filteredPosts = BLOG_POSTS.filter(post => {
+  const filteredPosts = posts.filter(post => {
     const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -179,8 +191,8 @@ export default function Blog() {
   })
 
   // Get recent and popular posts for sidebar
-  const recentPosts = [...BLOG_POSTS].sort((a, b) => b.id - a.id).slice(0, 5)
-  const popularPosts = [...BLOG_POSTS].sort((a, b) => b.views - a.views).slice(0, 5)
+  const recentPosts = [...posts].sort((a, b) => b.id - a.id).slice(0, 5)
+  const popularPosts = [...posts].sort((a, b) => b.views - a.views).slice(0, 5)
 
   // Reset filters
   const resetFilters = () => {
@@ -318,7 +330,12 @@ export default function Blog() {
               </div>
             )}
 
-            {filteredPosts.length > 0 ? (
+            {isLoading ? (
+              <div className="text-center py-24">
+                <div className="w-8 h-8 rounded-full border-4 border-[#FA0C83]/30 border-t-[#FA0C83] animate-spin mx-auto mb-4" />
+                <p className="text-xs font-black uppercase tracking-widest text-zinc-400">Loading Content...</p>
+              </div>
+            ) : filteredPosts.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {filteredPosts.map((post, index) => {
                   return (
@@ -536,7 +553,7 @@ export default function Blog() {
                         }`}
                     >
                       <span>{month}</span>
-                      <span className="text-[10px] text-zinc-400">({BLOG_POSTS.filter(p => p.month === month).length})</span>
+                      <span className="text-[10px] text-zinc-400">({posts.filter(p => p.month === month).length})</span>
                     </button>
                   </li>
                 ))}
@@ -560,7 +577,7 @@ export default function Blog() {
                         }`}
                     >
                       <span>{cat}</span>
-                      <span className="text-[10px] text-zinc-400">({BLOG_POSTS.filter(p => p.category === cat).length})</span>
+                      <span className="text-[10px] text-zinc-400">({posts.filter(p => p.category === cat).length})</span>
                     </button>
                   </li>
                 ))}

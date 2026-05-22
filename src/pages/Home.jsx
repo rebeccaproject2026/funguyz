@@ -1307,9 +1307,30 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-10">
           {/* Section Heading */}
           <div className="flex items-center justify-between border-b border-zinc-800 pb-4 mb-8">
-            <h2 className="text-white font-black text-xl md:text-2xl uppercase tracking-tight">
-              Best Selling Magic Mushrooms
-            </h2>
+            <div>
+              <motion.span
+                initial={{ opacity: 0, letterSpacing: '0.1em' }}
+                whileInView={{ opacity: 1, letterSpacing: '0.25em' }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                className="inline-flex items-center gap-2 text-[10px] font-black uppercase text-[#01CBDF] mb-2"
+              >
+                <motion.span
+                  animate={{ width: ['16px', '28px', '16px'] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                  className="h-[1.5px] bg-[#01CBDF] inline-block"
+                />
+                Premium Selection
+                <motion.span
+                  animate={{ width: ['16px', '28px', '16px'] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+                  className="h-[1.5px] bg-[#01CBDF] inline-block"
+                />
+              </motion.span>
+              <h2 className="text-white font-black text-xl md:text-2xl uppercase tracking-tight">
+                Best Selling Magic Mushrooms
+              </h2>
+            </div>
             <button
               onClick={handleShopNowClick}
               className="flex items-center gap-1.5 text-zinc-400 hover:text-[#FA0C83] text-xs font-bold uppercase tracking-widest transition-colors duration-300 cursor-pointer group"
@@ -1356,9 +1377,25 @@ export default function Home() {
           {/* Section Heading */}
           <div className="flex flex-col sm:flex-row items-center justify-between border-b border-zinc-200 pb-6 mb-12 text-center sm:text-left gap-4">
             <div>
-              <span className="text-[10px] font-black text-[#FA0C83] bg-[#FA0C83]/10 px-3 py-1 rounded-full uppercase tracking-widest">
+              <motion.span
+                initial={{ opacity: 0, letterSpacing: '0.1em' }}
+                whileInView={{ opacity: 1, letterSpacing: '0.25em' }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                className="inline-flex items-center gap-2 text-[10px] font-black uppercase text-[#FA0C83] mb-3"
+              >
+                <motion.span
+                  animate={{ width: ['16px', '28px', '16px'] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                  className="h-[1.5px] bg-[#FA0C83] inline-block"
+                />
                 DISCOVER OUR CATALOG
-              </span>
+                <motion.span
+                  animate={{ width: ['16px', '28px', '16px'] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+                  className="h-[1.5px] bg-[#FA0C83] inline-block"
+                />
+              </motion.span>
               <h2 className="text-3xl md:text-4xl font-black font-display text-zinc-900 mt-2 tracking-tight">
                 MUSHROOM CATEGORIES
               </h2>
@@ -1386,18 +1423,26 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WAVY DIVIDER 4: Categories (Light) to Testimonials (Dark) */}
-      <div className="w-full overflow-hidden leading-[0] bg-white pointer-events-none relative z-10 -mb-1">
+      {/* WAVY DIVIDER 4: Categories (Light) to Testimonials (Image) */}
+      <div 
+        className="w-full overflow-hidden leading-[0] pointer-events-none relative z-10 -mb-1"
+        style={{
+          backgroundImage: `linear-gradient(to right, rgba(250, 12, 131, 0.85), rgba(1, 203, 223, 0.85)), url(${customerbg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
         <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[40px] sm:h-[60px] md:h-[90px]">
-          <path d="M0,70 C300,30 650,110 900,50 C1050,20 1150,60 1200,75 L1200,120 L0,120 Z" fill="#FA0C83" opacity="0.2" />
-          <path d="M0,80 C250,40 600,100 850,40 C1000,10 1120,50 1200,65 L1200,120 L0,120 Z" fill="#00f2fe" opacity="0.15" />
-          <path d="M0,90 C200,50 500,90 800,50 C950,30 1100,70 1200,60 L1200,120 L0,120 Z" fill="#111113" />
+          <path d="M0,70 C300,30 650,110 900,50 C1050,20 1150,60 1200,75 L1200,0 L0,0 Z" fill="#ffffff" opacity="0.3" />
+          <path d="M0,80 C250,40 600,100 850,40 C1000,10 1120,50 1200,65 L1200,0 L0,0 Z" fill="#ffffff" opacity="0.6" />
+          <path d="M0,90 C200,50 500,90 800,50 C950,30 1100,70 1200,60 L1200,0 L0,0 Z" fill="#ffffff" />
         </svg>
       </div>
 
       {/* TESTIMONIALS SECTION (Redesigned matching image style with theme elements) */}
       <section
-        className="w-full py-20 bg-[#111113] z-10 select-none relative overflow-hidden"
+        className="w-full py-20 bg-transparent z-10 select-none relative overflow-hidden"
         style={{
           backgroundImage: `linear-gradient(to right, rgba(250, 12, 131, 0.85), rgba(1, 203, 223, 0.85)), url(${customerbg})`,
           backgroundSize: 'cover',
@@ -1408,10 +1453,28 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-20">
           {/* Section Heading */}
           <div className="flex flex-col items-center text-center pb-12 mb-5">
+            <motion.span
+              initial={{ opacity: 0, letterSpacing: '0.1em' }}
+              whileInView={{ opacity: 1, letterSpacing: '0.25em' }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="inline-flex items-center gap-2 text-[10px] font-black uppercase text-[#01CBDF] mb-3"
+            >
+              <motion.span
+                animate={{ width: ['16px', '28px', '16px'] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                className="h-[1.5px] bg-[#01CBDF] inline-block"
+              />
+              Testimonials
+              <motion.span
+                animate={{ width: ['16px', '28px', '16px'] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+                className="h-[1.5px] bg-[#01CBDF] inline-block"
+              />
+            </motion.span>
             <h2 className="text-2xl md:text-3xl font-bold font-sans text-white tracking-wide uppercase">
               OUR CUSTOMER SAYS
             </h2>
-            <span className="w-16 h-1 bg-gradient-to-r from-[#FA0C83] to-[#01CBDF] mt-4 inline-block rounded-full" />
           </div>
 
           {/* Testimonial Content */}
@@ -1472,8 +1535,16 @@ export default function Home() {
         </div>
       </section>
 
-      {/* WAVY DIVIDER: Testimonials (Dark) to Service Features (Light) */}
-      <div className="w-full overflow-hidden leading-[0] bg-[#111113] pointer-events-none relative z-10 -mb-1">
+      {/* WAVY DIVIDER: Testimonials (Image) to Service Features (Light) */}
+      <div 
+        className="w-full overflow-hidden leading-[0] pointer-events-none relative z-10 -mb-2"
+        style={{
+          backgroundImage: `linear-gradient(to right, rgba(250, 12, 131, 0.85), rgba(1, 203, 223, 0.85)), url(${customerbg})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }}
+      >
         <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[40px] sm:h-[60px] md:h-[90px]">
           <path d="M0,60 C350,20 650,110 950,50 C1080,20 1150,60 1200,75 L1200,120 L0,120 Z" fill="#FA0C83" opacity="0.15" />
           <path d="M0,70 C300,30 600,100 900,40 C1050,10 1120,50 1200,65 L1200,120 L0,120 Z" fill="#01CBDF" opacity="0.1" />
@@ -1500,11 +1571,25 @@ export default function Home() {
             transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
             className="mb-8 text-center"
           >
-            <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.25em] text-[#FA0C83] mb-3">
-              <span className="w-5 h-[1.5px] bg-[#FA0C83] inline-block" />
+            <motion.span
+              initial={{ opacity: 0, letterSpacing: '0.1em' }}
+              whileInView={{ opacity: 1, letterSpacing: '0.25em' }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.25em] text-[#FA0C83] mb-3"
+            >
+              <motion.span
+                animate={{ width: ['16px', '28px', '16px'] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                className="h-[1.5px] bg-[#FA0C83] inline-block"
+              />
               Why Choose Us
-              <span className="w-5 h-[1.5px] bg-[#FA0C83] inline-block" />
-            </span>
+              <motion.span
+                animate={{ width: ['16px', '28px', '16px'] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+                className="h-[1.5px] bg-[#FA0C83] inline-block"
+              />
+            </motion.span>
             <h2 className="text-zinc-900 font-black text-3xl md:text-5xl uppercase tracking-tight">
               Core Highlights
             </h2>
@@ -1633,10 +1718,25 @@ export default function Home() {
             className="flex flex-col sm:flex-row items-center justify-between border-b border-zinc-800/80 pb-8 mb-8 gap-4"
           >
             <div>
-              <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.25em] text-[#FA0C83] mb-2">
-                <span className="w-5 h-[1.5px] bg-[#FA0C83] inline-block" />
+              <motion.span
+                initial={{ opacity: 0, letterSpacing: '0.1em' }}
+                whileInView={{ opacity: 1, letterSpacing: '0.25em' }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.25em] text-[#FA0C83] mb-2"
+              >
+                <motion.span
+                  animate={{ width: ['16px', '28px', '16px'] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                  className="h-[1.5px] bg-[#FA0C83] inline-block"
+                />
                 Shroom Knowledge
-              </span>
+                <motion.span
+                  animate={{ width: ['16px', '28px', '16px'] }}
+                  transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+                  className="h-[1.5px] bg-[#FA0C83] inline-block"
+                />
+              </motion.span>
               <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight">Latest News & Blogs</h2>
             </div>
 
@@ -1858,18 +1958,32 @@ export default function Home() {
       <section className="w-full py-12 bg-[#fafafa] z-10 relative overflow-hidden">
         <div className="absolute top-1/4 left-[5%] w-[400px] h-[400px] rounded-full bg-[#FA0C83]/5 blur-[120px] pointer-events-none" />
         <div className="absolute bottom-1/4 right-[5%] w-[400px] h-[400px] rounded-full bg-[#01CBDF]/5 blur-[120px] pointer-events-none" />
-        
+
         {/* Abstract Map Nodes Texture */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
           style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, rgba(0,0,0,0.8) 1px, transparent 0)', backgroundSize: '48px 48px' }} />
 
         <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-10">
           <div className="text-center mb-10">
-            <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.25em] text-[#FA0C83] mb-3">
-              <span className="w-5 h-[1.5px] bg-[#FA0C83] inline-block" />
+            <motion.span
+              initial={{ opacity: 0, letterSpacing: '0.1em' }}
+              whileInView={{ opacity: 1, letterSpacing: '0.25em' }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8, delay: 0.1 }}
+              className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.25em] text-[#FA0C83] mb-3"
+            >
+              <motion.span
+                animate={{ width: ['16px', '28px', '16px'] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                className="h-[1.5px] bg-[#FA0C83] inline-block"
+              />
               Service Areas
-              <span className="w-5 h-[1.5px] bg-[#FA0C83] inline-block" />
-            </span>
+              <motion.span
+                animate={{ width: ['16px', '28px', '16px'] }}
+                transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
+                className="h-[1.5px] bg-[#FA0C83] inline-block"
+              />
+            </motion.span>
             <h2 className="text-3xl md:text-5xl font-black text-zinc-900 uppercase tracking-tight">Where We Provide Services</h2>
             <p className="text-zinc-500 text-sm md:text-base mt-4 max-w-lg mx-auto">
               We bring the highest quality mushroom products directly to your doorstep. Currently serving major metropolitan areas and expanding rapidly.
@@ -1894,14 +2008,14 @@ export default function Home() {
               >
                 {/* Glow on hover */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[#FA0C83]/0 to-[#01CBDF]/0 group-hover:from-[#FA0C83]/5 group-hover:to-[#01CBDF]/5 transition-colors duration-500" />
-                
+
                 <div className="w-12 h-12 rounded-2xl bg-zinc-50 border border-zinc-100 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 group-hover:shadow-[0_0_25px_rgba(250,12,131,0.15)] group-hover:border-[#FA0C83]/20">
                   <MapPin className="w-5 h-5 text-[#FA0C83]" />
                 </div>
-                
+
                 <h3 className="text-xl font-black text-zinc-900 uppercase tracking-wider mb-1">{loc.city}</h3>
                 <p className="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-5">{loc.province}</p>
-                
+
                 <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#01CBDF]/10 border border-[#01CBDF]/20 text-[#01CBDF] text-[9px] font-black uppercase tracking-widest">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#01CBDF] animate-pulse" />
                   {loc.status}
@@ -1923,73 +2037,9 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-
-
-      {/* CONTACT US SECTION (Commented Out for Now) */}
-      {/*
-      <section className="w-full py-24 bg-[#0f1117] z-10 select-none relative overflow-hidden">
-        <div className="absolute top-1/4 left-[5%] w-[400px] h-[400px] rounded-full bg-[#FA0C83]/8 blur-[130px] pointer-events-none" />
-        <div className="absolute bottom-1/4 right-[5%] w-[400px] h-[400px] rounded-full bg-[#01CBDF]/8 blur-[130px] pointer-events-none" />
-        <div className="absolute inset-0 pointer-events-none opacity-[0.03]"
-          style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.5) 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
-
-        <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-10">
-          <div className="text-center mb-16">
-            <span className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.25em] text-[#FA0C83] mb-3">
-              <span className="w-5 h-[1.5px] bg-[#FA0C83] inline-block" />
-              Get In Touch
-              <span className="w-5 h-[1.5px] bg-[#FA0C83] inline-block" />
-            </span>
-            <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight">Contact Us</h2>
-            <p className="text-zinc-500 text-sm mt-3 max-w-md mx-auto">Have questions? Our team is here to guide your journey.</p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-            <div className="space-y-5">
-              {[
-                { icon: MapPin,  label: 'Our Location',  value: '2046 Shroom Street, Vancouver, BC, Canada', color: '#FA0C83' },
-                { icon: Phone,   label: 'Phone Number',  value: '+1 (576) 245-2470',                          color: '#01CBDF' },
-                { icon: Mail,    label: 'Email Address', value: 'info@funguyz.com',                           color: '#FA0C83' },
-                { icon: Clock,   label: 'Working Hours', value: 'Mon – Fri / 9:00 AM – 6:00 PM',             color: '#01CBDF' },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center gap-5 p-5 rounded-2xl border border-zinc-800/80 bg-zinc-950/60 backdrop-blur-sm group">
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: `${item.color}15`, border: `1.5px solid ${item.color}30`, color: item.color }}>
-                    <item.icon className="w-5 h-5 animate-pulse" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-widest mb-0.5" style={{ color: item.color }}>{item.label}</p>
-                    <p className="text-white text-sm font-semibold">{item.value}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="bg-zinc-900/50 backdrop-blur-md border border-zinc-800/80 rounded-3xl p-8">
-              <div className="flex items-center gap-4 mb-8 pb-6 border-b border-zinc-800">
-                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FA0C83] to-[#01CBDF] flex items-center justify-center text-white font-black text-lg">G</div>
-                <div>
-                  <p className="text-white font-black text-sm">Guest User</p>
-                  <p className="text-zinc-500 text-[11px]">Not signed in</p>
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <input type="text" placeholder="Full Name" className="w-full bg-zinc-950/60 border border-zinc-800 focus:border-[#FA0C83] text-white text-xs font-semibold placeholder-zinc-600 px-4 py-3.5 rounded-xl outline-none" />
-                  <input type="email" placeholder="Email Address" className="w-full bg-zinc-950/60 border border-zinc-800 focus:border-[#FA0C83] text-white text-xs font-semibold placeholder-zinc-600 px-4 py-3.5 rounded-xl outline-none" />
-                </div>
-                <input type="text" placeholder="Subject" className="w-full bg-zinc-950/60 border border-zinc-800 focus:border-[#FA0C83] text-white text-xs font-semibold placeholder-zinc-600 px-4 py-3.5 rounded-xl outline-none" />
-                <textarea rows={4} placeholder="Your message..." className="w-full bg-zinc-950/60 border border-zinc-800 focus:border-[#FA0C83] text-white text-xs font-semibold placeholder-zinc-600 px-4 py-3.5 rounded-xl outline-none resize-none" />
-                <button className="w-full flex items-center justify-center gap-2 py-4 rounded-xl text-white text-[11px] font-black uppercase tracking-widest" style={{ background: 'linear-gradient(135deg, #FA0C83, #01CBDF)' }}>Send Message</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      */}
-
-      <ShippingModal 
-        isOpen={isShippingModalOpen} 
-        onClose={() => setIsShippingModalOpen(false)} 
+      <ShippingModal
+        isOpen={isShippingModalOpen}
+        onClose={() => setIsShippingModalOpen(false)}
       />
     </>
   )

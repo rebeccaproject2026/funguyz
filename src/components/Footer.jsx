@@ -121,12 +121,13 @@ export default function Footer() {
                   const isBlog = link === 'Recipes & Cooking Tips';
                   const isShop = link === 'Shop All';
                   const isTrackOrder = link === 'Track Order';
+                  const isAbout = link === 'About Us';
 
                   return (
                     <li key={link}>
-                      {isContact || isBlog || isShop || isTrackOrder ? (
+                      {isContact || isBlog || isShop || isTrackOrder || isAbout ? (
                         <Link
-                          to={isContact ? '/contact-us' : isShop ? '/#shop' : isTrackOrder ? '/track-order' : '/blog'}
+                          to={isContact ? '/contact-us' : isShop ? '/#shop' : isTrackOrder ? '/track-order' : isAbout ? '/about' : '/blog'}
                           className="text-zinc-400 hover:text-white text-sm font-medium transition-all duration-300 flex items-center group relative py-0.5 pl-0"
                         >
                           <span className="absolute -left-3.5 w-1.5 h-1.5 rounded-full bg-[#FA0C83] opacity-0 scale-50 group-hover:opacity-100 group-hover:scale-100 transition-all duration-300" />

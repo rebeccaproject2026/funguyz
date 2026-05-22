@@ -20,7 +20,7 @@ export default function Stepper({ currentStep }) {
   };
 
   return (
-    <div className="flex items-center justify-center gap-3 pt-2 pb-10 w-full px-4 text-base md:text-2xl font-bold">
+    <div className="flex items-center justify-center gap-1.5 sm:gap-3 pt-2 pb-10 w-full px-2 text-base sm:text-lg md:text-xl lg:text-2xl font-bold whitespace-nowrap">
       {steps.map((step, idx) => {
         const isActive = currentStep === step.id;
         const isPast = currentStep > step.id;

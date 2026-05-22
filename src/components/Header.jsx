@@ -287,14 +287,14 @@ export default function Header({
                 exit={{ opacity: 0, y: -20, scale: 0.96 }}
                 transition={{ duration: 0.25, ease: 'easeOut' }}
               >
-                <div className="bg-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-[2.5rem] shadow-2xl p-8 grid grid-cols-4 gap-8 overflow-hidden">
+                <div className="bg-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-[2.5rem] shadow-2xl p-6 lg:p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 overflow-y-auto max-h-[80vh]">
                   {hoveredLink === 'shop' && (
                     <>
                       {/* Col 1: Tops */}
                       <div className="space-y-4">
                         <h3 className="text-xs font-black text-brand-red uppercase tracking-widest">Mushrooms</h3>
                         <ul className="space-y-2">
-                          {['Magic Mushrooms', 'Freeze Dried Mushrooms', 'Shroom Capsules', 'Shroom Gummies'].map((link) => (
+                          {['Golden Teacher', 'Penis Envy & Albino PE', 'Blue Meanie', 'True Albino Teacher', 'Exotic Strains', 'Shop All Strains →'].map((link) => (
                             <li key={link} className="flex items-center gap-1.5 group">
                               <CornerDownRight className="w-3.5 h-3.5 text-white/20 group-hover:text-brand-red transition-colors" />
                               <a href="/#shop" className="text-xs font-bold text-zinc-400 hover:text-white transition-colors">
@@ -309,7 +309,7 @@ export default function Header({
                       <div className="space-y-4">
                         <h3 className="text-xs font-black text-brand-red uppercase tracking-widest">Edibles</h3>
                         <ul className="space-y-2">
-                          {['Shroom Chocolates', 'Shroom Tea', 'Shroom Syrup', 'Shroom Aid'].map((link) => (
+                          {['Mushroom Chocolates', 'Fruit Gummies', 'Utopia Premium Gummies', 'Toad Chocolates & Bites', 'Infused Teas'].map((link) => (
                             <li key={link} className="flex items-center gap-1.5 group">
                               <CornerDownRight className="w-3.5 h-3.5 text-white/20 group-hover:text-brand-red transition-colors" />
                               <a href="/#shop" className="text-xs font-bold text-zinc-400 hover:text-white transition-colors">
@@ -322,9 +322,9 @@ export default function Header({
 
                       {/* Col 3: Accessories */}
                       <div className="space-y-4">
-                        <h3 className="text-xs font-black text-brand-red uppercase tracking-widest">Extras</h3>
+                        <h3 className="text-xs font-black text-brand-red uppercase tracking-widest">Capsules & Wellness</h3>
                         <ul className="space-y-2">
-                          {['DMT Vape', 'LSD', 'Merch', 'Connoisseur Box'].map((link) => (
+                          {['Strain-Specific Capsules', 'Focus Blend', 'Calm Blend', "Lion's Mane", 'Reishi', 'Chaga'].map((link) => (
                             <li key={link} className="flex items-center gap-1.5 group">
                               <CornerDownRight className="w-3.5 h-3.5 text-white/20 group-hover:text-brand-red transition-colors" />
                               <a href="/#shop" className="text-xs font-bold text-zinc-400 hover:text-white transition-colors">
@@ -343,11 +343,11 @@ export default function Header({
                   <div className="bg-[#09090b] text-white rounded-3xl p-5 border border-zinc-800 relative overflow-hidden flex flex-col justify-between h-[180px] group">
                     <div className="absolute right-[-30px] top-[-30px] w-24 h-24 bg-brand-red/10 rounded-full group-hover:scale-150 transition-transform duration-500"></div>
                     <div>
-                      <span className="text-[8px] font-black bg-brand-red px-2 py-0.5 rounded-full tracking-widest">HOT COMBO</span>
-                      <h4 className="font-display font-black text-sm mt-3 leading-tight">FREE SOCKS WITH<br />MUSHROOM CAP DROP</h4>
+                      <span className="text-[8px] font-black bg-brand-red px-2 py-0.5 rounded-full tracking-widest">NEW ARRIVAL</span>
+                      <h4 className="font-display font-black text-sm mt-3 leading-tight">TRY THE NEW UTOPIA<br />PREMIUM GUMMIES</h4>
                     </div>
                     <a href="/#shop" className="text-[10px] font-black text-brand-red hover:text-white flex items-center gap-1">
-                      <span>REDEEM OFFER</span>
+                      <span>SHOP NOW</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
                     </a>
                   </div>

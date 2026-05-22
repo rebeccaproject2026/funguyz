@@ -1,84 +1,98 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ArrowLeft, ArrowRight, ShoppingCart, Sparkles, ShieldCheck, Zap } from 'lucide-react'
+import { fetchHeroSlides } from '../services/api'
 
 import main1 from '../assets/main1.jpg'
 import main2 from '../assets/main2.jpg'
 import main3 from '../assets/main3.jpg'
 import main4 from '../assets/main4.jpg'
 
+const STATIC_SLIDES = [
+  {
+    id: 1,
+    image: main1,
+    tag: "COLLECTION 01 // MAGIC PSILOCYBIN",
+    accentTitle: "PREMIUM",
+    mainTitle: "CULTIVATION",
+    desc: "Experience the ultimate gold standard of organic magic mushrooms. Hand-harvested, slow-cured, and lab-tested to deliver pure, mind-expanding journeys and profound spiritual clarity.",
+    features: ["100% Organic Spores", "Optimal Potency", "Lab Certified Pure"],
+    badge: "BEST SELLER // CLASSIC",
+    spec1Title: "SPECIES",
+    spec1Val: "GOLDEN TEACHER",
+    spec2Title: "POTENCY",
+    spec2Val: "ELEVATED GRADE",
+    spec2Sub: "TRIP RATING: ★★★★★"
+  },
+  {
+    id: 2,
+    image: main2,
+    tag: "COLLECTION 02 // FOCUS & ENERGY",
+    accentTitle: "EVOLVED",
+    mainTitle: "MICRODOSE",
+    desc: "Enhance your daily cognitive potential. Expertly measured sub-perceptual shroom capsules designed to augment concentration, relieve anxiety, and expand creative flow without hallucinations.",
+    features: ["Precision Vegan Caps", "Cognitive Enhancement", "Non-Hallucinogenic"],
+    badge: "POPULAR // ACTIVE FORMULA",
+    spec1Title: "FORMULA",
+    spec1Val: "MIND ENERGY",
+    spec2Title: "DOSING",
+    spec2Val: "150MG PER CAP",
+    spec2Sub: "30 CAPS PER BOTTLE"
+  },
+  {
+    id: 3,
+    image: main3,
+    tag: "COLLECTION 03 // CRYOGENIC RESERVE",
+    accentTitle: "FREEZE DRIED",
+    mainTitle: "INTEGRITY",
+    desc: "A revolutionary scientific leap in shroom preservation. Cryogenic freeze-drying locked-in 100% of the active compound structure, producing a delightful crispy texture and an unmatched shelf life.",
+    features: ["Cryo-Locked Compounds", "Crispy Delight Texture", "24-Month Active Life"],
+    badge: "INNOVATION COLLECTION",
+    spec1Title: "TECH SHIELD",
+    spec1Val: "CRYO-LOCK INTENSE",
+    spec2Title: "SHELF LIFE",
+    spec2Val: "24 MONTHS STABLE",
+    spec2Sub: "NO REFRIGERATION"
+  },
+  {
+    id: 4,
+    image: main4,
+    tag: "COLLECTION 04 // INDULGENT EDIBLES",
+    accentTitle: "PSYCHEDELIC",
+    mainTitle: "CONFECTIONERY",
+    desc: "Delectable Belgian chocolate and artisanal gummy fusions infused with purified psilocybin extract. Indulge in gourmet flavor profiles meticulously balanced with accurate portion dosing.",
+    features: ["Artisanal Dark Cocoa", "Purified Extract", "Accurate Microdosing"],
+    badge: "NEW DROP RELEASE",
+    spec1Title: "INFUSED",
+    spec1Val: "72% BELGIAN COCOA",
+    spec2Title: "EXTRACT",
+    spec2Val: "ULTRA PURIFIED",
+    spec2Sub: "DELICATE STRAWBERRY"
+  }
+]
+
 export default function Hero({ onShopNowClick }) {
   const [activeSlide, setActiveSlide] = useState(0)
+  const [slidesData, setSlidesData] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
   const heroRef = useRef(null)
   const buttonRef = useRef(null)
   const [buttonOffset, setButtonOffset] = useState({ x: 0, y: 0 })
 
-  const slides = [
-    {
-      id: 1,
-      image: main1,
-      tag: "COLLECTION 01 // MAGIC PSILOCYBIN",
-      accentTitle: "PREMIUM",
-      mainTitle: "CULTIVATION",
-      desc: "Experience the ultimate gold standard of organic magic mushrooms. Hand-harvested, slow-cured, and lab-tested to deliver pure, mind-expanding journeys and profound spiritual clarity.",
-      features: ["100% Organic Spores", "Optimal Potency", "Lab Certified Pure"],
-      badge: "BEST SELLER // CLASSIC",
-      spec1Title: "SPECIES",
-      spec1Val: "GOLDEN TEACHER",
-      spec2Title: "POTENCY",
-      spec2Val: "ELEVATED GRADE",
-      spec2Sub: "TRIP RATING: ★★★★★"
-    },
-    {
-      id: 2,
-      image: main2,
-      tag: "COLLECTION 02 // FOCUS & ENERGY",
-      accentTitle: "EVOLVED",
-      mainTitle: "MICRODOSE",
-      desc: "Enhance your daily cognitive potential. Expertly measured sub-perceptual shroom capsules designed to augment concentration, relieve anxiety, and expand creative flow without hallucinations.",
-      features: ["Precision Vegan Caps", "Cognitive Enhancement", "Non-Hallucinogenic"],
-      badge: "POPULAR // ACTIVE FORMULA",
-      spec1Title: "FORMULA",
-      spec1Val: "MIND ENERGY",
-      spec2Title: "DOSING",
-      spec2Val: "150MG PER CAP",
-      spec2Sub: "30 CAPS PER BOTTLE"
-    },
-    {
-      id: 3,
-      image: main3,
-      tag: "COLLECTION 03 // CRYOGENIC RESERVE",
-      accentTitle: "FREEZE DRIED",
-      mainTitle: "INTEGRITY",
-      desc: "A revolutionary scientific leap in shroom preservation. Cryogenic freeze-drying locked-in 100% of the active compound structure, producing a delightful crispy texture and an unmatched shelf life.",
-      features: ["Cryo-Locked Compounds", "Crispy Delight Texture", "24-Month Active Life"],
-      badge: "INNOVATION COLLECTION",
-      spec1Title: "TECH SHIELD",
-      spec1Val: "CRYO-LOCK INTENSE",
-      spec2Title: "SHELF LIFE",
-      spec2Val: "24 MONTHS STABLE",
-      spec2Sub: "NO REFRIGERATION"
-    },
-    {
-      id: 4,
-      image: main4,
-      tag: "COLLECTION 04 // INDULGENT EDIBLES",
-      accentTitle: "PSYCHEDELIC",
-      mainTitle: "CONFECTIONERY",
-      desc: "Delectable Belgian chocolate and artisanal gummy fusions infused with purified psilocybin extract. Indulge in gourmet flavor profiles meticulously balanced with accurate portion dosing.",
-      features: ["Artisanal Dark Cocoa", "Purified Extract", "Accurate Microdosing"],
-      badge: "NEW DROP RELEASE",
-      spec1Title: "INFUSED",
-      spec1Val: "72% BELGIAN COCOA",
-      spec2Title: "EXTRACT",
-      spec2Val: "ULTRA PURIFIED",
-      spec2Sub: "DELICATE STRAWBERRY"
-    }
-  ]
+  useEffect(() => {
+    fetchHeroSlides(STATIC_SLIDES).then(data => {
+      setSlidesData(data)
+      setIsLoading(false)
+    })
+  }, [])
 
-  const handleNext = () => setActiveSlide((prev) => (prev + 1) % slides.length)
-  const handlePrev = () => setActiveSlide((prev) => (prev - 1 + slides.length) % slides.length)
+  const handleNext = () => {
+    setActiveSlide((prev) => (prev + 1) % STATIC_SLIDES.length)
+  }
+  const handlePrev = () => {
+    setActiveSlide((prev) => (prev - 1 + STATIC_SLIDES.length) % STATIC_SLIDES.length)
+  }
 
   // Auto-slide every 8 seconds
   useEffect(() => {
@@ -153,17 +167,35 @@ export default function Hero({ onShopNowClick }) {
     animate: { opacity: 1, scale: 1, x: 0, transition: { type: 'spring', delay: 0.6, stiffness: 90, damping: 14 } }
   }
 
-  const slide = slides[activeSlide]
+  const slide = slidesData[activeSlide]
+
+  if (isLoading || !slide) {
+    return (
+      <div className="w-full min-h-screen bg-[#161616] flex items-center justify-center">
+        <div className="w-10 h-10 rounded-full border-4 border-[#FA0C83]/30 border-t-[#FA0C83] animate-spin mb-4" />
+      </div>
+    )
+  }
 
   return (
     <div
       ref={heroRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="w-full min-h-screen bg-[#161616] border-b border-zinc-900 pt-36 pb-24 md:pt-48 md:pb-28 px-4 md:px-12 lg:px-16 flex items-center justify-center relative overflow-hidden font-sans select-none"
+      className="w-full min-h-screen bg-[#161616] border-b border-zinc-900 py-24 md:pt-48 md:pb-28 px-4 md:px-12 lg:px-16 flex items-center justify-center relative overflow-hidden font-sans select-none"
     >
       {/* Grid background */}
       <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.01)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.01)_1px,transparent_1px)] bg-[size:40px_40px] pointer-events-none z-0 opacity-50" />
+
+      {/* MOBILE BACKGROUND */}
+      <div className="absolute inset-0 lg:hidden z-0">
+        <AnimatePresence mode="wait">
+          <motion.div key={activeSlide} className="absolute inset-0" initial={{opacity:0}} animate={{opacity:1}} exit={{opacity:0}}>
+            <img src={slidesData[activeSlide]?.image} alt="bg" className="w-full h-full object-cover filter brightness-[0.25]" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#161616] via-[#161616]/60 to-transparent" />
+          </motion.div>
+        </AnimatePresence>
+      </div>
 
       {/* Glow orbs */}
       <div className="absolute top-1/4 left-10 w-[300px] h-[300px] rounded-full bg-[#FA0C83]/5 blur-[120px] pointer-events-none z-0" />
@@ -180,7 +212,7 @@ export default function Hero({ onShopNowClick }) {
         </motion.h1>
       </div>
 
-      <div className="w-full max-w-7xl mx-auto relative z-10 min-h-[500px]">
+      <div className="w-full max-w-7xl mx-auto relative z-10 min-h-[500px] flex items-center">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeSlide}
@@ -192,11 +224,11 @@ export default function Hero({ onShopNowClick }) {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="col-span-12 lg:col-span-6 space-y-5 flex flex-col justify-center items-center lg:items-start text-center lg:text-left w-full px-2 lg:px-4"
+              className="col-span-1 lg:col-span-6 space-y-5 flex flex-col justify-center items-center lg:items-start text-center lg:text-left w-full px-2 lg:px-4 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)] lg:drop-shadow-none"
             >
               <motion.div
                 variants={childVariants}
-                className="flex items-center gap-2 px-4 py-1.5 bg-[#FA0C83]/10 border border-[#FA0C83]/20 rounded-full w-fit"
+                className="flex items-center gap-2 px-4 py-1.5 bg-[#FA0C83]/10 border border-[#FA0C83]/20 rounded-full w-fit mx-auto lg:mx-0"
               >
                 <Sparkles className="w-3.5 h-3.5 text-[#FA0C83] animate-pulse" />
                 <span className="text-[10px] font-black text-[#FA0C83] uppercase tracking-widest font-display">
@@ -204,7 +236,7 @@ export default function Hero({ onShopNowClick }) {
                 </span>
               </motion.div>
 
-              <div className="space-y-1 max-w-xl">
+              <div className="space-y-1 max-w-xl mx-auto lg:mx-0 text-center lg:text-left">
                 <motion.h2
                   variants={childVariants}
                   className="text-4xl sm:text-5xl lg:text-6xl font-black font-display text-white tracking-tight leading-[1.1] uppercase"
@@ -216,7 +248,7 @@ export default function Hero({ onShopNowClick }) {
 
               <motion.p
                 variants={childVariants}
-                className="text-zinc-400 text-sm md:text-base font-medium max-w-lg leading-relaxed font-sans"
+                className="text-zinc-400 text-sm md:text-base font-medium max-w-lg leading-relaxed font-sans mx-auto lg:mx-0 text-center lg:text-left"
               >
                 {slide.desc}
               </motion.p>
@@ -251,15 +283,15 @@ export default function Hero({ onShopNowClick }) {
 
               <motion.div
                 variants={childVariants}
-                className="flex items-center gap-6 pt-4 text-[10px] font-black text-zinc-500 border-t border-zinc-900 w-full justify-center lg:justify-start"
+                className="flex flex-col sm:flex-row flex-wrap items-center gap-3 sm:gap-6 pt-4 text-[10px] font-black text-zinc-500 border-t border-zinc-900 w-full justify-center lg:justify-start text-center"
               >
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center justify-center gap-1.5">
                   <ShieldCheck className="w-4 h-4 text-green-600" />
-                  <span className="tracking-widest uppercase">100% SECURE CHECKOUT</span>
+                  <span className="tracking-widest uppercase text-center w-full">100% SECURE CHECKOUT</span>
                 </div>
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center justify-center gap-1.5">
                   <Zap className="w-4 h-4 text-yellow-500" />
-                  <span className="tracking-widest uppercase">FAST DELIVERY & SHIPPING ACROSS CANADA!</span>
+                  <span className="tracking-widest uppercase text-center w-full">FAST DELIVERY & SHIPPING ACROSS CANADA!</span>
                 </div>
               </motion.div>
             </motion.div>
@@ -270,7 +302,7 @@ export default function Hero({ onShopNowClick }) {
               initial="initial"
               animate="animate"
               exit="exit"
-              className="col-span-12 lg:col-span-6 flex justify-center items-center relative"
+              className="col-span-1 lg:col-span-6 justify-center items-center relative hidden lg:flex"
             >
               <div className="absolute w-[80%] h-[80%] rounded-full bg-gradient-to-tr from-[#FA0C83] to-orange-600 opacity-20 blur-[130px] pointer-events-none z-0" />
 
@@ -323,15 +355,15 @@ export default function Hero({ onShopNowClick }) {
       </div>
 
       {/* Pagination Dots */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20">
-        {slides.map((_, i) => (
+      <div className="absolute bottom-6 sm:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-2 sm:gap-3 z-20">
+        {slidesData.map((_, i) => (
           <button
             key={i}
             onClick={() => setActiveSlide(i)}
-            className="relative flex items-center justify-center w-8 h-8 focus:outline-none cursor-pointer group"
+            className="relative flex items-center justify-center w-6 h-6 sm:w-8 sm:h-8 focus:outline-none cursor-pointer group"
           >
             <span
-              className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${
+              className={`w-1.5 h-1.5 sm:w-2.5 sm:h-2.5 rounded-full transition-all duration-300 ${
                 i === activeSlide
                   ? 'bg-[#FA0C83] scale-110 shadow-[0_0_8px_rgba(250,12,131,0.5)]'
                   : 'bg-white/35 group-hover:bg-white group-hover:scale-110'
@@ -342,18 +374,18 @@ export default function Hero({ onShopNowClick }) {
       </div>
 
       {/* Arrow Buttons */}
-      <div className="absolute bottom-8 right-12 hidden lg:flex items-center gap-4.5 z-20">
+      <div className="absolute bottom-6 sm:bottom-8 right-4 sm:right-12 flex items-center gap-2 sm:gap-4.5 z-20">
         <button
           onClick={handlePrev}
-          className="p-3.5 bg-white/[0.02] border border-white/10 hover:border-[#FA0C83]/50 rounded-full text-white hover:text-[#FA0C83] hover:shadow-[0_0_20px_rgba(250,12,131,0.15)] transition-all cursor-pointer group focus:outline-none"
+          className="p-2 sm:p-3.5 bg-white/[0.02] border border-white/10 hover:border-[#FA0C83]/50 rounded-full text-white hover:text-[#FA0C83] hover:shadow-[0_0_20px_rgba(250,12,131,0.15)] transition-all cursor-pointer group focus:outline-none"
         >
-          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-0.5 transition-transform" />
+          <ArrowLeft className="w-3.5 h-3.5 sm:w-5 sm:h-5 group-hover:-translate-x-0.5 transition-transform" />
         </button>
         <button
           onClick={handleNext}
-          className="p-3.5 bg-white/[0.02] border border-white/10 hover:border-[#FA0C83]/50 rounded-full text-white hover:text-[#FA0C83] hover:shadow-[0_0_20px_rgba(250,12,131,0.15)] transition-all cursor-pointer group focus:outline-none"
+          className="p-2 sm:p-3.5 bg-white/[0.02] border border-white/10 hover:border-[#FA0C83]/50 rounded-full text-white hover:text-[#FA0C83] hover:shadow-[0_0_20px_rgba(250,12,131,0.15)] transition-all cursor-pointer group focus:outline-none"
         >
-          <ArrowRight className="w-5 h-5 group-hover:translate-x-0.5 transition-transform" />
+          <ArrowRight className="w-3.5 h-3.5 sm:w-5 sm:h-5 group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>
     </div>

@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, HelpCircle, Search, Sparkles, MessageSquare, ShieldCheck, Truck, ArrowRight, RotateCcw } from 'lucide-react'
 import { Link } from 'react-router-dom'
+import { fetchFaqs } from '../services/api'
 import main5 from '../assets/main5.jpg'
 
 // Floating particle component for the hero section
@@ -98,8 +99,19 @@ export default function Faq() {
   const [openReturnsId, setOpenReturnsId] = useState(9)   // First item open by default
   const [openSearchId, setOpenSearchId] = useState(null)
 
+  // API State
+  const [faqData, setFaqData] = useState({ shipping: [], returns: [], all: [] })
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    fetchFaqs({ shipping: SHIPPING_FAQS, returns: RETURNS_FAQS, all: ALL_FAQS }).then(data => {
+      setFaqData(data)
+      setIsLoading(false)
+    })
+  }, [])
+
   // Filter for search
-  const searchedFaqs = ALL_FAQS.filter(item =>
+  const searchedFaqs = faqData.all.filter(item =>
     item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
     item.answer.toLowerCase().includes(searchQuery.toLowerCase())
   )
@@ -200,7 +212,7 @@ export default function Faq() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 pb-15">
 
         {/* Search Bar */}
         <div className="relative w-full max-w-xl mx-auto mb-16">
@@ -229,44 +241,41 @@ export default function Faq() {
               </div>
 
               <div className="space-y-4">
-                {SHIPPING_FAQS.map((faq) => {
-                  const isOpen = openShippingId === faq.id
-                  return (
-                    <div
-                      key={faq.id}
-                      className={`border rounded-2xl overflow-hidden bg-white transition-all duration-300 ${
-                        isOpen ? 'border-[#FA0C83] bg-white shadow-md shadow-[#FA0C83]/5' : 'border-zinc-200 bg-white hover:border-zinc-300'
-                      }`}
+                {faqData.shipping.map((faq) => (
+                  <motion.div
+                    key={faq.id}
+                    className={`border rounded-2xl overflow-hidden bg-white transition-all duration-300 ${
+                      openShippingId === faq.id ? 'border-[#FA0C83] bg-white shadow-md shadow-[#FA0C83]/5' : 'border-zinc-200 bg-white hover:border-zinc-300'
+                    }`}
+                  >
+                    <button
+                      onClick={() => toggleShipping(faq.id)}
+                      className="w-full flex items-center justify-between p-5 text-left cursor-pointer outline-none"
                     >
-                      <button
-                        onClick={() => toggleShipping(faq.id)}
-                        className="w-full flex items-center justify-between p-5 text-left cursor-pointer outline-none"
-                      >
-                        <span className={`text-xs md:text-sm font-bold tracking-wide transition-colors ${
-                          isOpen ? 'text-[#FA0C83]' : 'text-zinc-800'
-                        }`}>
-                          {faq.question}
-                        </span>
-                        <ChevronDown
-                          className={`w-4 h-4 flex-shrink-0 transition-transform duration-300 ${
-                            isOpen ? 'rotate-180 text-[#FA0C83]' : 'text-zinc-500'
-                          }`}
-                        />
-                      </button>
+                      <span className={`text-xs md:text-sm font-bold tracking-wide transition-colors ${
+                        openShippingId === faq.id ? 'text-[#FA0C83]' : 'text-zinc-800'
+                      }`}>
+                        {faq.question}
+                      </span>
+                      <ChevronDown
+                        className={`w-4 h-4 flex-shrink-0 transition-transform duration-300 ${
+                          openShippingId === faq.id ? 'rotate-180 text-[#FA0C83]' : 'text-zinc-500'
+                        }`}
+                      />
+                    </button>
 
-                      <motion.div
-                        initial={{ height: 0 }}
-                        animate={{ height: isOpen ? 'auto' : 0 }}
-                        transition={{ duration: 0.3, ease: 'easeInOut' }}
-                        className="overflow-hidden"
-                      >
-                        <div className="px-5 pb-5 text-xs md:text-sm leading-relaxed font-normal pt-3 border-t text-zinc-650 border-t-zinc-100">
-                          {faq.answer}
-                        </div>
-                      </motion.div>
-                    </div>
-                  )
-                })}
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: openShippingId === faq.id ? 'auto' : 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-5 pb-5 text-xs md:text-sm leading-relaxed font-normal pt-3 border-t text-zinc-650 border-t-zinc-100">
+                        {faq.answer}
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                ))}
               </div>
             </div>
 
@@ -280,44 +289,41 @@ export default function Faq() {
               </div>
 
               <div className="space-y-4">
-                {RETURNS_FAQS.map((faq) => {
-                  const isOpen = openReturnsId === faq.id
-                  return (
-                    <div
-                      key={faq.id}
-                      className={`border rounded-2xl overflow-hidden bg-white transition-all duration-300 ${
-                        isOpen ? 'border-[#FA0C83] bg-white shadow-md shadow-[#FA0C83]/5' : 'border-zinc-200 bg-white hover:border-zinc-300'
-                      }`}
+                {faqData.returns.map((faq) => (
+                  <motion.div
+                    key={faq.id}
+                    className={`border rounded-2xl overflow-hidden bg-white transition-all duration-300 ${
+                      openReturnsId === faq.id ? 'border-[#FA0C83] bg-white shadow-md shadow-[#FA0C83]/5' : 'border-zinc-200 bg-white hover:border-zinc-300'
+                    }`}
+                  >
+                    <button
+                      onClick={() => toggleReturns(faq.id)}
+                      className="w-full flex items-center justify-between p-5 text-left cursor-pointer outline-none"
                     >
-                      <button
-                        onClick={() => toggleReturns(faq.id)}
-                        className="w-full flex items-center justify-between p-5 text-left cursor-pointer outline-none"
-                      >
-                        <span className={`text-xs md:text-sm font-bold tracking-wide transition-colors ${
-                          isOpen ? 'text-[#FA0C83]' : 'text-zinc-800'
-                        }`}>
-                          {faq.question}
-                        </span>
-                        <ChevronDown
-                          className={`w-4 h-4 flex-shrink-0 transition-transform duration-300 ${
-                            isOpen ? 'rotate-180 text-[#FA0C83]' : 'text-zinc-500'
-                          }`}
-                        />
-                      </button>
+                      <span className={`text-xs md:text-sm font-bold tracking-wide transition-colors ${
+                        openReturnsId === faq.id ? 'text-[#FA0C83]' : 'text-zinc-800'
+                      }`}>
+                        {faq.question}
+                      </span>
+                      <ChevronDown
+                        className={`w-4 h-4 flex-shrink-0 transition-transform duration-300 ${
+                          openReturnsId === faq.id ? 'rotate-180 text-[#FA0C83]' : 'text-zinc-500'
+                        }`}
+                      />
+                    </button>
 
-                      <motion.div
-                        initial={{ height: 0 }}
-                        animate={{ height: isOpen ? 'auto' : 0 }}
-                        transition={{ duration: 0.3, ease: 'easeInOut' }}
-                        className="overflow-hidden"
-                      >
-                        <div className="px-5 pb-5 text-xs md:text-sm leading-relaxed font-normal pt-3 border-t text-zinc-650 border-t-zinc-100">
-                          {faq.answer}
-                        </div>
-                      </motion.div>
-                    </div>
-                  )
-                })}
+                    <motion.div
+                      initial={{ height: 0 }}
+                      animate={{ height: openReturnsId === faq.id ? 'auto' : 0 }}
+                      transition={{ duration: 0.3, ease: 'easeInOut' }}
+                      className="overflow-hidden"
+                    >
+                      <div className="px-5 pb-5 text-xs md:text-sm leading-relaxed font-normal pt-3 border-t text-zinc-650 border-t-zinc-100">
+                        {faq.answer}
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                ))}
               </div>
             </div>
 
@@ -409,15 +415,6 @@ export default function Faq() {
           </Link>
         </motion.div>
 
-      </div>
-
-      {/* WAVY DIVIDER: Page to Footer */}
-      <div className="w-full overflow-hidden leading-[0] bg-[#f4f4f6] pointer-events-none relative z-10 -mb-1">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[40px] sm:h-[60px] md:h-[80px]">
-          <path d="M0,60 C350,20 650,110 950,50 C1080,20 1150,60 1200,75 L1200,120 L0,120 Z" fill="#FA0C83" opacity="0.12" />
-          <path d="M0,75 C300,35 600,100 900,45 C1050,15 1120,55 1200,65 L1200,120 L0,120 Z" fill="#01CBDF" opacity="0.1" />
-          <path d="M0,88 C250,55 550,95 850,55 C1000,35 1100,70 1200,62 L1200,120 L0,120 Z" fill="#111113" />
-        </svg>
       </div>
     </div>
   )

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { CreditCard, Truck, ShieldCheck, MapPin, Package, User, Tag, FlaskConical } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CreditCard, Truck, ShieldCheck, MapPin, Package, User, Tag, FlaskConical, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Stepper from '../components/Stepper';
 import OrderSummary from '../components/OrderSummary';
@@ -13,6 +13,7 @@ export default function Checkout() {
   const [promoApplied, setPromoApplied] = useState(null);
   const [promo, setPromo] = useState('');
   const [promoError, setPromoError] = useState('');
+  const [isSummaryOpen, setIsSummaryOpen] = useState(false);
   const delivery = 'sameday';
 
   const { cartItems, cartSubtotal, cartTax, cartTotal, handleUpdateQuantity, clearCart } = useCart();
@@ -57,9 +58,17 @@ export default function Checkout() {
     visible: { opacity: 1, y: 0 }
   };
 
+  const handlePlaceOrder = () => {
+    const orderSnapshot = {
+      cartItems, subtotal: cartSubtotal, tax: cartTax, total, deliveryFee, discount, delivery
+    };
+    clearCart();
+    navigate('/order-complete', { state: orderSnapshot });
+  };
+
   return (
-    <div className="min-h-screen bg-[#F8F6F6] pt-28 pb-20 text-[#181211]">
-      <div className="max-w-[85%] mx-auto px-4">
+    <div className="min-h-screen bg-[#F8F6F6] pt-28 pb-32 md:pb-20 text-[#181211]">
+      <div className="w-full lg:max-w-[85%] mx-auto px-4 sm:px-6">
         
         <Stepper currentStep={2} />
 
@@ -205,7 +214,7 @@ export default function Checkout() {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
-            className="lg:col-span-5 text-zinc-900"
+            className="hidden lg:block lg:col-span-5 text-zinc-900"
           >
             <OrderSummary 
                 subtotal={cartSubtotal}
@@ -225,17 +234,115 @@ export default function Checkout() {
                 onRemovePromo={() => { setPromoApplied(null); setPromo(''); }}
                 buttonText="Place Order Securely"
                 buttonIcon={ShieldCheck}
-                onButtonClick={() => {
-                  const orderSnapshot = {
-                    cartItems, subtotal: cartSubtotal, tax: cartTax, total, deliveryFee, discount, delivery
-                  };
-                  clearCart();
-                  navigate('/order-complete', { state: orderSnapshot });
-                }}
+                onButtonClick={handlePlaceOrder}
             />
           </motion.div>
         </div>
       </div>
+
+      {/* Mobile Sticky Footer with Expandable Order Summary */}
+      {cartItems.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 bg-white shadow-[0_-10px_40px_rgba(0,0,0,0.1)] md:hidden z-50 flex flex-col rounded-t-3xl border-t border-zinc-200">
+          
+          {/* Header Toggle */}
+          <button 
+            onClick={() => setIsSummaryOpen(!isSummaryOpen)} 
+            className="flex justify-between items-center w-full p-5 pb-2"
+          >
+            <span className="font-bold text-[#181211] text-lg">Order Summary</span>
+            {isSummaryOpen ? <ChevronUp className="w-5 h-5 text-zinc-500" /> : <ChevronDown className="w-5 h-5 text-zinc-500" />}
+          </button>
+
+          {/* Expandable Content */}
+          <AnimatePresence>
+            {isSummaryOpen && (
+              <motion.div 
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden bg-white"
+              >
+                <div className="px-5 py-2 max-h-[50vh] overflow-y-auto space-y-5">
+                  {/* Items List */}
+                  <div className="space-y-4">
+                    {cartItems.map(item => (
+                      <div key={item.id} className="flex gap-4">
+                        <div className="w-16 h-16 rounded-2xl overflow-hidden bg-zinc-50 flex-shrink-0 border border-zinc-100 flex items-center justify-center p-1">
+                          <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
+                        </div>
+                        <div className="flex-1 flex flex-col justify-center">
+                          <h4 className="font-bold text-[#181211] text-[15px] leading-tight">{item.name}</h4>
+                          <p className="text-zinc-400 text-xs mt-0.5 italic">Qty: {item.quantity}</p>
+                          <div className="text-[var(--color-brand-red)] font-bold text-sm mt-1">${item.price.toFixed(2)}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Promo Code Input */}
+                  <div className="flex items-center gap-2 border border-zinc-100 bg-[#F8FAFC] rounded-2xl px-4 py-3 shadow-sm">
+                    <Tag className="text-zinc-400 w-4 h-4 flex-shrink-0" />
+                    <input 
+                      type="text" 
+                      value={promo}
+                      onChange={e => setPromo(e.target.value)}
+                      onKeyDown={e => e.key === 'Enter' && handleApplyPromo()}
+                      placeholder="Promo code" 
+                      className="flex-1 text-sm outline-none bg-transparent placeholder-zinc-400 text-[#0F172A]"
+                    />
+                    {promoApplied ? (
+                      <button onClick={() => { setPromoApplied(null); setPromo(''); }} className="text-sm font-bold text-zinc-500 hover:text-zinc-700">Remove</button>
+                    ) : (
+                      <button onClick={handleApplyPromo} className="text-sm font-bold text-[var(--color-brand-red)] hover:opacity-80">Apply</button>
+                    )}
+                  </div>
+                  {promoError && <p className="text-xs text-[var(--color-brand-red)] font-medium px-2 mt-1">{promoError}</p>}
+                  {promoApplied && (
+                    <div className="flex justify-between items-center bg-green-50 px-3 py-2 rounded-lg text-xs font-semibold text-green-700 mt-2">
+                      <span>"{promoApplied.code}" Applied</span>
+                      <span>-${discount.toFixed(2)}</span>
+                    </div>
+                  )}
+
+                  {/* Cost Breakdown */}
+                  <div className="space-y-3 pt-3 border-t border-zinc-100 pb-2">
+                    <div className="flex justify-between text-sm text-[#475569]">
+                      <span>Subtotal</span>
+                      <span className="font-bold text-[#0F172A]">${cartSubtotal.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-sm text-[#475569]">
+                      <span>Delivery</span>
+                      <span className="font-bold text-green-600">FREE</span>
+                    </div>
+                    <div className="flex justify-between text-sm text-[#475569]">
+                      <span>Estimated Taxes</span>
+                      <span className="font-bold text-[#0F172A]">${cartTax.toFixed(2)}</span>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {/* Fixed Bottom Row */}
+          <div className="p-5 pt-3 flex items-center justify-between bg-white z-10 border-t border-zinc-50">
+            <div className="flex flex-col">
+              <span className="text-3xl font-black text-[#0F172A] leading-tight">${total.toFixed(2)}</span>
+              {discount > 0 && (
+                <span className="bg-[#D1FAE5] text-[#047857] text-[10px] font-bold px-2.5 py-0.5 rounded-full w-fit uppercase tracking-widest mt-0.5">
+                  SAVE ${discount.toFixed(2)}
+                </span>
+              )}
+            </div>
+            <button 
+              onClick={handlePlaceOrder}
+              className="bg-[var(--color-brand-red)] hover:bg-[var(--color-brand-red-hover)] text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 shadow-md transition-colors cursor-pointer"
+            >
+              Place Secure Order <ArrowRight className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

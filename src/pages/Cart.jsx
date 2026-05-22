@@ -52,8 +52,8 @@ export default function Cart() {
   const total = cartTotal + deliveryFee - discount;
 
   return (
-    <div className="min-h-screen bg-[#fafafa] pt-28 pb-20 text-white">
-      <div className="max-w-[85%] mx-auto px-4">
+    <div className="min-h-screen bg-[#fafafa] pt-28 pb-32 md:pb-20 text-white">
+      <div className="w-full lg:max-w-[85%] mx-auto px-4 sm:px-6">
         
         <Stepper currentStep={1} />
 
@@ -83,34 +83,44 @@ export default function Cart() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95 }}
-                  className="bg-white rounded-2xl shadow-md p-3 flex flex-col sm:flex-row items-center gap-6 text-white"
+                  className="bg-white rounded-3xl p-4 flex gap-4 border border-zinc-100 relative shadow-[0_4px_20px_rgba(0,0,0,0.03)]"
                 >
-                  <div className="w-20 h-20 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-zinc-100 flex-shrink-0 border border-[#E2E8F0]">
-                    <img src={item.image} alt={item.name} className="w-full h-full object-cover opacity-90 hover:opacity-100 transition-opacity" />
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden bg-white flex-shrink-0 flex items-center justify-center">
+                    <img src={item.image} alt={item.name} className="w-full h-full object-contain" />
                   </div>
                   
-                  <div className="flex-1 text-center sm:text-left">
-                    <h3 className="text-xl font-bold mb-1 text-[#0F172A]">{item.name}</h3>
-                    <p className="text-[#475569] text-sm mb-4">{item.description}</p>
-                    <div className="text-[var(--color-brand-red)] font-black text-xl">${item.price.toFixed(2)}</div>
-                  </div>
-
-                  <div className="flex items-center gap-6">
-                    <div className="flex items-center gap-4 bg-[#F8FAFC] rounded-full px-4 py-2 border border-[#CBD5E1]">
-                      <button onClick={() => handleUpdateQuantityWrapper(item.id, -1)} className="text-[#64748B] hover:text-[var(--color-brand-red)] transition-colors">
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span className="font-bold w-4 text-center text-[#0F172A]">{item.quantity}</span>
-                      <button onClick={() => handleUpdateQuantityWrapper(item.id, 1)} className="text-[#64748B] hover:text-[var(--color-brand-red)] transition-colors">
-                        <Plus className="w-4 h-4" />
+                  <div className="flex-1 flex flex-col justify-between py-1">
+                    <div className="flex justify-between items-start gap-4">
+                      <div>
+                        <div className="mb-2">
+                          <span className="bg-[#FFF0F5] text-[var(--color-brand-red)] text-[10px] font-bold px-2.5 py-1 rounded-md tracking-wider uppercase">
+                            Best Seller
+                          </span>
+                        </div>
+                        <h3 className="text-[17px] font-bold text-[#0F172A] leading-tight">{item.name}</h3>
+                        <p className="text-[#64748B] text-[13px] mt-1 line-clamp-1">{item.description}</p>
+                      </div>
+                      
+                      <button 
+                        onClick={() => handleRemoveItem(item.id)}
+                        className="text-zinc-400 hover:text-[var(--color-brand-red)] transition-colors p-1"
+                      >
+                        <Trash2 className="w-[18px] h-[18px]" />
                       </button>
                     </div>
-                    <button 
-                      onClick={() => handleRemoveItem(item.id)}
-                      className="text-zinc-400 hover:text-[var(--color-brand-red)] transition-colors p-2"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
+
+                    <div className="flex justify-between items-end mt-4">
+                      <div className="flex items-center gap-3 bg-[#F8FAFC] rounded-full px-2 py-1.5 border border-[#E2E8F0]">
+                        <button onClick={() => handleUpdateQuantityWrapper(item.id, -1)} className="text-[#64748B] hover:text-[var(--color-brand-red)] transition-colors px-1.5">
+                          <Minus className="w-3.5 h-3.5" />
+                        </button>
+                        <span className="font-bold w-4 text-center text-[13px] text-[#0F172A]">{item.quantity}</span>
+                        <button onClick={() => handleUpdateQuantityWrapper(item.id, 1)} className="text-white hover:opacity-80 transition-opacity bg-[var(--color-brand-red)] rounded-full p-1 ml-1 cursor-pointer">
+                          <Plus className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                      <div className="text-[#0F172A] font-black text-lg">${item.price.toFixed(2)}</div>
+                    </div>
                   </div>
                 </motion.div>
               ))}
@@ -146,6 +156,26 @@ export default function Cart() {
           </div>
         )}
       </div>
+      
+      {/* Mobile Sticky Footer */}
+      {cartItems.length > 0 && (
+        <div className="fixed bottom-0 left-0 right-0 bg-[#F4F1EB] shadow-[0_-10px_40px_rgba(0,0,0,0.1)] p-5 md:hidden z-50 flex items-center justify-between rounded-t-3xl border-t border-white/20">
+          <div className="flex flex-col">
+            <span className="text-3xl font-black text-[#0F172A] leading-tight">${total.toFixed(2)}</span>
+            {discount > 0 && (
+              <span className="bg-[#D1FAE5] text-[#047857] text-[10px] font-bold px-2.5 py-0.5 rounded-full w-fit uppercase tracking-widest mt-0.5">
+                SAVE ${discount.toFixed(2)}
+              </span>
+            )}
+          </div>
+          <button 
+            onClick={() => navigate('/checkout')}
+            className="bg-[var(--color-brand-red)] hover:bg-[var(--color-brand-red-hover)] text-white font-bold py-3.5 px-6 rounded-xl flex items-center justify-center gap-2 shadow-lg transition-colors cursor-pointer"
+          >
+            Proceed to Checkout <ArrowRight className="w-4 h-4" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

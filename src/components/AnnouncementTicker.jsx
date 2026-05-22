@@ -62,7 +62,7 @@ export default function AnnouncementTicker() {
 
       {/* Quick utility links */}
       <div className="hidden md:flex items-center gap-6 text-white font-semibold border-l border-zinc-800 pl-5">
-        <Link to="/#about" className="flex items-center gap-1 hover:text-brand-red transition-colors">
+        <Link to="/about" className="flex items-center gap-1 hover:text-brand-red transition-colors">
           <Users className="w-3 h-3 text-brand-red" />
           <span>ABOUT</span>
         </Link>
