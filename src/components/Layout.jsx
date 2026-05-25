@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import AnnouncementTicker from './AnnouncementTicker'
 import Header from './Header'
 import Footer from './Footer'
@@ -16,6 +16,7 @@ export default function Layout() {
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const { pathname } = useLocation()
+  const navigate = useNavigate()
 
   // Toast state
   const [toast, setToast] = useState({ visible: false, item: null })
@@ -89,21 +90,13 @@ export default function Layout() {
     setToast({ visible: true, item: addedItem })
   }
 
-  // CTA Shop Now action -> adds the cryogenic reserve shrooms package to cart
+  // CTA Shop Now action -> navigate to /productlist
   const handleShopNowClick = () => {
-    const reservePackage = {
-      id: 204,
-      name: 'Freeze Dried Amazonian Cryo-Shrooms',
-      price: 64.99,
-      size: 'Whole',
-      color: 'Premium Reserve',
-      image: main1
-    }
-    handleAddToCartWithToast(reservePackage)
+    navigate('/productlist')
   }
 
   return (
-    <div className="min-h-screen bg-white text-brand-dark overflow-x-hidden relative flex flex-col font-sans">
+    <div className="overflow-hidden bg-white text-brand-dark overflow-x-hidden relative flex flex-col font-sans">
       
       {/* Announcement Scrolling Marquee */}
       <AnnouncementTicker />

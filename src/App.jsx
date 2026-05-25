@@ -9,9 +9,10 @@ import Checkout from './pages/Checkout'
 import Cart from './pages/Cart'
 import OrderComplete from './pages/OrderComplete'
 import TrackOrder from './pages/TrackOrder'
-// import About from './pages/About'
+import About from './pages/About'
 import ScrollToTop from './components/ScrollToTop'
 import { CartProvider } from './context/CartContext'
+// import ProductList from './pages/ProductList'
 
 export default function App() {
   return (
@@ -21,9 +22,10 @@ export default function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
+            {/* <Route path="productlist" element={<ProductList />} /> */}
             <Route path="blog" element={<Blog />} />
             <Route path="faq" element={<Faq />} />
-            {/* <Route path="about" element={<About />} /> */}
+            <Route path="about" element={<About />} />
             <Route path="contact-us" element={<ContactUs />} />
             <Route path="cart" element={<Cart />} />
             <Route path="checkout" element={<Checkout />} />

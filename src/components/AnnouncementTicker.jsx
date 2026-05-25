@@ -1,16 +1,10 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 import { BookOpen, HelpCircle, Phone, Sparkles, Users } from 'lucide-react'
 
-const items = [
-  "WELCOME TO OUR STORE!",
-  "FREE SHIPPING ON ALL LATEST DROPS OVER $75",
-  "HUGE SALE ACTIVE: MIN. 40-80% OFF EVERYTHING",
-  "STREETWEAR DROP 01 IS NOW LIVE",
-];
+
 export default function AnnouncementTicker() {
   return (
-    <div className="w-full bg-[#09090b] text-white py-2 pr-4  flex justify-between items-center text-[10px] md:text-xs font-bold tracking-wider relative z-50 select-none border-b border-zinc-900">
+    <div className="w-full bg-[#09090b] text-white py-2 pr-10  flex justify-between items-center text-[10px] md:text-xs font-bold tracking-wider relative z-50 select-none border-b border-zinc-900">
 
       {/* Continuous Scrolling Marquee Text */}
       <Link
@@ -25,24 +19,36 @@ export default function AnnouncementTicker() {
               key={i}
               className="flex items-center gap-10 whitespace-nowrap pr-10"
             >
-              <span className="flex items-center gap-1.5 text-brand-red">
+              <span className="flex items-center gap-1.5 text-brand-red font-black">
                 <Sparkles className="w-3.5 h-3.5 text-yellow-400 animate-pulse" />
-                <span>WELCOME TO OUR STORE!</span>
+                <span>Canada’s Largest Magic Mushroom Dispensary</span>
               </span>
 
               <span className="text-zinc-400">•</span>
 
-              <span>FREE SHIPPING ON ALL LATEST DROPS OVER $75</span>
+              <span>Toronto Magic Mushroom Delivery Same-Day</span>
+
+              <span className="text-zinc-400">•</span>
+
+              <span>Ottawa Magic Mushroom Delivery Same-Day</span>
+
+              <span className="text-zinc-400">•</span>
+
+              <span>Free Delivery on Orders Over $120</span>
 
               <span className="text-zinc-400">•</span>
 
               <span className="text-brand-red font-black">
-                HUGE SALE ACTIVE: MIN. 40-80% OFF EVERYTHING
+                30% OFF All Products + Promo Coupons
               </span>
 
               <span className="text-zinc-400">•</span>
 
-              <span>STREETWEAR DROP 01 IS NOW LIVE</span>
+              <span>Express Delivery Under 2 Hours</span>
+
+              <span className="text-zinc-400">•</span>
+
+              <span>Buy Magic Mushrooms Canada-Wide Shipping</span>
             </div>
           ))}
         </div>
@@ -61,7 +67,7 @@ export default function AnnouncementTicker() {
 `}</style>
 
       {/* Quick utility links */}
-      <div className="hidden md:flex items-center gap-6 text-white font-semibold border-l border-zinc-800 pl-5">
+      <div className="hidden md:flex items-center gap-6 text-white font-semibold border-l border-zinc-800 pl-12">
         <Link to="/about" className="flex items-center gap-1 hover:text-brand-red transition-colors">
           <Users className="w-3 h-3 text-brand-red" />
           <span>ABOUT</span>

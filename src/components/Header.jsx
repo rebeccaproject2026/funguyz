@@ -138,14 +138,12 @@ export default function Header({
 
               {/* COMPACT RIGHT: Shop, Cart */}
               <div className="flex items-center gap-3">
-                <motion.a
-                  href="/#shop"
-                  whileHover={{ scale: 1.08 }}
-                  whileTap={{ scale: 0.92 }}
+                <Link
+                  to="/productlist"
                   className="p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all cursor-pointer text-white/90"
                 >
                   <Store className="w-4.5 h-4.5" />
-                </motion.a>
+                </Link>
                 <motion.button
                   onClick={onOpenCart}
                   whileHover={{ scale: 1.05 }}
@@ -207,15 +205,15 @@ export default function Header({
                           transition={{ type: 'spring', stiffness: 350, damping: 28 }}
                         />
                       )}
-                      <a
-                        href={`/#${item.id}`}
+                      <Link
+                        to={item.id === 'shop' ? '/productlist' : `/#${item.id}`}
                         className={`relative z-10 flex items-center gap-1 font-display font-extrabold text-[13px] tracking-widest transition-colors duration-200 ${isActiveLink ? 'text-white' : 'text-white/80'
                           }`}
                       >
                         <span>{item.label}</span>
                         {item.hasDropdown && <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${isActiveLink ? 'rotate-180 text-white' : 'text-white/60'
                           }`} />}
-                      </a>
+                      </Link>
                     </div>
                   );
                 })}
@@ -287,49 +285,64 @@ export default function Header({
                 exit={{ opacity: 0, y: -20, scale: 0.96 }}
                 transition={{ duration: 0.25, ease: 'easeOut' }}
               >
-                <div className="bg-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-[2.5rem] shadow-2xl p-6 lg:p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 overflow-y-auto max-h-[80vh]">
+                <div className="bg-zinc-900/95 backdrop-blur-xl border border-white/10 rounded-[2.5rem] shadow-2xl p-6 lg:p-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 lg:gap-5 overflow-y-auto max-h-[80vh]">
                   {hoveredLink === 'shop' && (
                     <>
-                      {/* Col 1: Tops */}
-                      <div className="space-y-4">
-                        <h3 className="text-xs font-black text-brand-red uppercase tracking-widest">Mushrooms</h3>
-                        <ul className="space-y-2">
-                          {['Golden Teacher', 'Penis Envy & Albino PE', 'Blue Meanie', 'True Albino Teacher', 'Exotic Strains', 'Shop All Strains →'].map((link) => (
+                      {/* Col 1: Magic Mushrooms */}
+                      <div className="space-y-3">
+                        <h3 className="text-xs font-black text-brand-red uppercase tracking-widest">Magic Mushrooms</h3>
+                        <ul className="space-y-1">
+                          {['Beginner Friendly', 'Creative Boost', 'Relax & Chill', 'Focus & Clarity', 'Happy & Euphoric', 'Visual Experience', 'Deep Journey', 'Elevated Experience'].map((link) => (
                             <li key={link} className="flex items-center gap-1.5 group">
                               <CornerDownRight className="w-3.5 h-3.5 text-white/20 group-hover:text-brand-red transition-colors" />
-                              <a href="/#shop" className="text-xs font-bold text-zinc-400 hover:text-white transition-colors">
+                              <Link to="/productlist" className="text-[11px] font-bold text-zinc-400 hover:text-white transition-colors">
                                 {link}
-                              </a>
+                              </Link>
                             </li>
                           ))}
                         </ul>
                       </div>
 
-                      {/* Col 2: Bottoms */}
-                      <div className="space-y-4">
+                      {/* Col 2: Microdose */}
+                      <div className="space-y-3">
+                        <h3 className="text-xs font-black text-brand-red uppercase tracking-widest">Microdose</h3>
+                        <ul className="space-y-1">
+                          {['Focus & Clarity', 'Daily Wellness', 'Creative Boost', 'Mood Support', 'Energy Boost', 'Stress Relief', 'Beginner Friendly', 'Balanced Mind'].map((link) => (
+                            <li key={link} className="flex items-center gap-1.5 group">
+                              <CornerDownRight className="w-3.5 h-3.5 text-white/20 group-hover:text-brand-red transition-colors" />
+                              <Link to="/productlist" className="text-[11px] font-bold text-zinc-400 hover:text-white transition-colors">
+                                {link}
+                              </Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Col 3: Edibles */}
+                      <div className="space-y-3">
                         <h3 className="text-xs font-black text-brand-red uppercase tracking-widest">Edibles</h3>
-                        <ul className="space-y-2">
-                          {['Mushroom Chocolates', 'Fruit Gummies', 'Utopia Premium Gummies', 'Toad Chocolates & Bites', 'Infused Teas'].map((link) => (
+                        <ul className="space-y-1">
+                          {['Happy & Euphoric', 'Relax & Chill', 'Creative Boost', 'Visual Experience', 'Smooth Journey', 'Social Vibes', 'Beginner Friendly', 'Elevated Experience'].map((link) => (
                             <li key={link} className="flex items-center gap-1.5 group">
                               <CornerDownRight className="w-3.5 h-3.5 text-white/20 group-hover:text-brand-red transition-colors" />
-                              <a href="/#shop" className="text-xs font-bold text-zinc-400 hover:text-white transition-colors">
+                              <Link to="/productlist" className="text-[11px] font-bold text-zinc-400 hover:text-white transition-colors">
                                 {link}
-                              </a>
+                              </Link>
                             </li>
                           ))}
                         </ul>
                       </div>
 
-                      {/* Col 3: Accessories */}
-                      <div className="space-y-4">
-                        <h3 className="text-xs font-black text-brand-red uppercase tracking-widest">Capsules & Wellness</h3>
-                        <ul className="space-y-2">
-                          {['Strain-Specific Capsules', 'Focus Blend', 'Calm Blend', "Lion's Mane", 'Reishi', 'Chaga'].map((link) => (
+                      {/* Col 4: Capsules */}
+                      <div className="space-y-3">
+                        <h3 className="text-xs font-black text-brand-red uppercase tracking-widest">Capsules</h3>
+                        <ul className="space-y-1">
+                          {['Focus & Clarity', 'Daily Wellness', 'Relax & Chill', 'Energy Boost', 'Balanced Mind', 'Mood Support', 'Beginner Friendly', 'Creative Boost'].map((link) => (
                             <li key={link} className="flex items-center gap-1.5 group">
                               <CornerDownRight className="w-3.5 h-3.5 text-white/20 group-hover:text-brand-red transition-colors" />
-                              <a href="/#shop" className="text-xs font-bold text-zinc-400 hover:text-white transition-colors">
+                              <Link to="/productlist" className="text-[11px] font-bold text-zinc-400 hover:text-white transition-colors">
                                 {link}
-                              </a>
+                              </Link>
                             </li>
                           ))}
                         </ul>
@@ -346,10 +359,10 @@ export default function Header({
                       <span className="text-[8px] font-black bg-brand-red px-2 py-0.5 rounded-full tracking-widest">NEW ARRIVAL</span>
                       <h4 className="font-display font-black text-sm mt-3 leading-tight">TRY THE NEW UTOPIA<br />PREMIUM GUMMIES</h4>
                     </div>
-                    <a href="/#shop" className="text-[10px] font-black text-brand-red hover:text-white flex items-center gap-1">
+                    <Link to="/productlist" className="text-[10px] font-black text-brand-red hover:text-white flex items-center gap-1">
                       <span>SHOP NOW</span>
                       <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                    </a>
+                    </Link>
                   </div>
 
                 </div>

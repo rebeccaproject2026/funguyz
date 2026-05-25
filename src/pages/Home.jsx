@@ -7,6 +7,7 @@ import { motion, AnimatePresence, useMotionValue, useSpring, useAnimationFrame }
 import { Star, ArrowRight, Sparkles, Shuffle, ZoomIn, Truck, Calendar, ChevronLeft, ChevronRight, MapPin } from 'lucide-react'
 import Hero from '../components/Hero'
 import ShippingModal from '../components/ShippingModal'
+import ProductCard from '../components/ProductCard'
 
 // Import user-uploaded luxury mushroom assets
 import main5 from '../assets/main5.jpg'
@@ -19,7 +20,8 @@ import main3 from '../assets/main3.jpg'
 import avatar1 from '../assets/images/customer1.jpg'
 import avatar2 from '../assets/images/customer2.jpg'
 import avatar3 from '../assets/images/customer3.jpg'
-import customerbg from '../assets/images/customerbg.jpg'
+import customerbg from '../assets/customerbg.png'
+import category from '../assets/category.png'
 // 3D Parallax Tilt Category Card Component with Cursor Spotlight and Glossy Shimmer
 function CategoryCard({ cat, index, handleShopNowClick }) {
   const cardRef = useRef(null)
@@ -556,254 +558,10 @@ function OfferCard({ offer, handleShopNowClick, index }) {
   )
 }
 
-// Premium Showroom Product Card with Stacked Fan Cards, Spotlight Glow, 3D Spring Tilt & Cyberpunk Hover Shadows
-function ShowroomProductCard({ product, handleAddToCart, variants }) {
-  const cardRef = useRef(null)
-  const [rotateX, setRotateX] = useState(0)
-  const [rotateY, setRotateY] = useState(0)
-  const [glowX, setGlowX] = useState(0)
-  const [glowY, setGlowY] = useState(0)
-  const [isHovered, setIsHovered] = useState(false)
-
-  const handleMouseMove = (e) => {
-    if (!cardRef.current) return
-    const rect = cardRef.current.getBoundingClientRect()
-
-    // Calculate cursor positions from -0.5 to 0.5 relative to center of the card
-    const x = (e.clientX - rect.left) / rect.width - 0.5
-    const y = (e.clientY - rect.top) / rect.height - 0.5
-
-    // Map to subtle tilting angles
-    setRotateX(-y * 12)
-    setRotateY(x * 12)
-
-    // Map to absolute pixels inside card bounding rect for the cursor glow spotlight
-    setGlowX(e.clientX - rect.left)
-    setGlowY(e.clientY - rect.top)
-  }
-
-  const handleMouseEnter = () => {
-    setIsHovered(true)
-  }
-
-  const handleMouseLeave = () => {
-    setIsHovered(false)
-    setRotateX(0)
-    setRotateY(0)
-  }
-
-  return (
-    <motion.div
-      ref={cardRef}
-      variants={variants}
-      className="w-full h-full cursor-pointer"
-      style={{
-        transformStyle: 'preserve-3d',
-        perspective: 1000,
-      }}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-    >
-      <motion.div
-        style={{
-          transformStyle: 'preserve-3d',
-          perspective: 1000,
-        }}
-        animate={{
-          rotateX: rotateX,
-          rotateY: rotateY,
-          y: isHovered ? -8 : 0,
-        }}
-        transition={{
-          type: 'spring',
-          stiffness: 150,
-          damping: 18,
-          mass: 0.5
-        }}
-        className="bg-zinc-900/30 backdrop-blur-sm border border-zinc-500 rounded-xl p-4 flex flex-col relative group cursor-pointer hover:shadow-[0_20px_45px_rgba(250,12,131,0.22)] hover:border-[#FA0C83] transition-all duration-300 overflow-hidden h-full w-full "
-      >
-        {/* Sliding White Hover Background (Bottom-Left to Top-Right) */}
-        <div
-          className={`absolute inset-0 bg-white rounded-xl z-0 pointer-events-none transition-transform duration-[800ms] ease-[cubic-bezier(0.16,1,0.3,1)] ${isHovered ? 'translate-x-0 translate-y-0' : '-translate-x-full translate-y-full'
-            }`}
-        />
-
-        {/* 1. Shimmer, Spotlight and Holographic Foil (Rounded, clipped inside card body) */}
-        <div className="absolute inset-0 rounded-[2rem] overflow-hidden pointer-events-none z-20">
-          {/* Dynamic Cursor Spotlight Glow */}
-          <div
-            style={{
-              background: `radial-gradient(180px circle at ${glowX}px ${glowY}px, rgba(249, 54, 45, 0.08), transparent 85%)`,
-              opacity: isHovered ? 1 : 0
-            }}
-            className="absolute inset-0 transition-opacity duration-300 pointer-events-none"
-          />
-
-          {/* Holographic Iridescent Sheen Overlay */}
-          <div
-            style={{
-              background: `radial-gradient(circle at ${glowX}px ${glowY}px, rgba(255, 255, 255, 0.15) 0%, rgba(0, 240, 255, 0.08) 30%, rgba(255, 0, 128, 0.08) 60%, transparent 80%)`,
-              mixBlendMode: 'color-dodge',
-              opacity: isHovered ? 1 : 0
-            }}
-            className="absolute inset-0 transition-opacity duration-500 pointer-events-none"
-          />
-
-          {/* Diagonal Glass Reflection Shimmer Sheen */}
-          <div
-            className="absolute inset-0 w-[200%] h-full pointer-events-none transform -skew-x-12 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-[1200ms] ease-out bg-gradient-to-r from-transparent via-white/10 to-transparent"
-          />
-        </div>
-
-        {/* Floating Spore Particles (Levitating Magic Spores) */}
-        {isHovered && (
-          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-[2rem] z-20">
-            {[...Array(6)].map((_, i) => (
-              <motion.div
-                key={i}
-                initial={{
-                  x: Math.random() * 200 + 40,
-                  y: 350,
-                  opacity: 0,
-                  scale: Math.random() * 0.4 + 0.6
-                }}
-                animate={{
-                  y: [-20, -120 - Math.random() * 150],
-                  x: [null, Math.random() * 60 - 30],
-                  opacity: [0, 0.8, 0],
-                }}
-                transition={{
-                  duration: Math.random() * 2 + 2,
-                  repeat: Infinity,
-                  delay: i * 0.45,
-                  ease: "easeOut"
-                }}
-                className="absolute w-1.5 h-1.5 rounded-full bg-gradient-to-r from-[#FA0C83] to-amber-400 blur-[1px] shadow-[0_0_8px_#FA0C83]"
-              />
-            ))}
-          </div>
-        )}
-
-        {/* 2. Interactive Portal & Image Frame */}
-        <div className="w-full aspect-[4/4] relative flex items-center justify-center flex-shrink-0 z-10 mb-5 select-none">
-
-          {/* Glowing Portal Ring behind the image */}
-          <motion.div
-            animate={{
-              opacity: isHovered ? 0.85 : 0,
-              scale: isHovered ? 1.15 : 0.8,
-              rotate: isHovered ? 360 : 0
-            }}
-            transition={{
-              opacity: { duration: 0.4 },
-              scale: { type: 'spring', stiffness: 80, damping: 15 },
-              rotate: { repeat: Infinity, duration: 10, ease: "linear" }
-            }}
-            className="absolute w-[95%] h-[95%] rounded-full bg-gradient-to-tr from-[#FA0C83]/30 via-purple-600/20 to-cyan-500/10 blur-[20px] pointer-events-none"
-          />
-
-          {/* Front Product Card Frame */}
-          <div className="absolute inset-0 rounded-lg overflow-hidden bg-zinc-950 border border-zinc-800/80 shadow-2xl flex items-center justify-center z-10 group/image">
-            {/* Subtle Ambient Vignette inside the front image card */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/10 to-black/50 z-10 pointer-events-none" />
-
-            {/* Product Image */}
-            <motion.img
-              src={product.image}
-              alt={product.name}
-              className={`w-[100%] h-[100%] object-cover transition-all duration-300 ${isHovered ? 'filter blur-[3px] brightness-[0.6]' : 'filter brightness-[0.88]'}`}
-            />
-
-            {/* Float Badge */}
-            <span className="absolute top-3.5 left-3.5 text-[8px] font-black text-white bg-[#FA0C83] py-1 px-3 rounded-full uppercase tracking-wider shadow-md z-20">
-              {product.badge}
-            </span>
-
-            {/* Quick Add overlay button */}
-            <div
-              className={`absolute inset-0 bg-black/50 backdrop-blur-[2.5px] transition-all duration-300 flex items-center justify-center z-20 ${isHovered ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}
-            >
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  if (handleAddToCart) handleAddToCart(product);
-                }}
-                className={`bg-white hover:bg-[#FA0C83] hover:text-white text-[#161616] font-display font-black text-[10px] py-2.5 px-5.5 rounded-xl shadow-lg transition-all duration-300 transform cursor-pointer ${isHovered ? 'translate-y-0' : 'translate-y-3'}`}
-              >
-                ADD TO BAG
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* 3. Product Details */}
-        <div className="flex-1 flex flex-col justify-between space-y-3.5 z-10" style={{ transform: 'translateZ(25px)' }}>
-          <div className="space-y-1">
-            {/* Category block */}
-            <span className={`text-[10px] font-medium uppercase tracking-wider font-sans block transition-colors duration-300 ${isHovered ? 'text-zinc-500' : 'text-zinc-400'}`}>
-              {product.category}, {product.category} CAPSULES
-            </span>
-
-            {/* Title */}
-            <h3 className={`font-sans font-semibold text-sm md:text-[15px] group-hover:text-[#FA0C83] transition-colors duration-300 line-clamp-1 leading-snug ${isHovered ? 'text-zinc-900' : 'text-zinc-100'}`}>
-              {product.name}
-            </h3>
-          </div>
-
-          {/* Price and Discount */}
-          <div className="flex items-center gap-2.5">
-            <span className={`text-sm md:text-base font-bold font-sans transition-colors duration-300 ${isHovered ? 'text-zinc-900' : 'text-white'}`}>
-              ${product.price.toFixed(2)}–${(product.originalPrice || product.price * 2).toFixed(2)}
-            </span>
-            <span className="text-[11px] font-extrabold text-[#28a745] font-sans">
-              {product.originalPrice ? '20% Off' : '15% Off'}
-            </span>
-          </div>
-
-          {/* Actions Row */}
-          <div className={`flex items-center gap-2 pt-2 border-t transition-colors duration-300 ${isHovered ? 'border-zinc-200' : 'border-zinc-800/40'}`}>
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                if (handleAddToCart) handleAddToCart(product);
-              }}
-              className="bg-[#FA0C83] hover:bg-[#01CBDF] text-white font-sans font-bold text-[10px] md:text-xs py-2 px-3 rounded-md transition-colors flex-1 text-center cursor-pointer uppercase tracking-wider  flex items-center justify-center"
-            >
-              SELECT OPTIONS
-            </button>
-
-            {/* Shuffle / Compare */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-              className={`w-[38px] h-[38px] border rounded-md flex items-center justify-center transition-all cursor-pointer ${isHovered ? 'border-zinc-200 text-zinc-500 hover:text-white hover:bg-zinc-900 hover:border-zinc-900' : 'border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800'}`}
-            >
-              <Shuffle className="w-4 h-4" />
-            </button>
-
-            {/* Quick View / ZoomIn */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-              className={`w-[38px] h-[38px] border rounded-md flex items-center justify-center transition-all cursor-pointer ${isHovered ? 'border-zinc-200 text-zinc-500 hover:text-white hover:bg-zinc-900 hover:border-zinc-900' : 'border-zinc-800 text-zinc-400 hover:text-white hover:bg-zinc-800'}`}
-            >
-              <ZoomIn className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      </motion.div>
-    </motion.div>
-  )
-}
-
 export default function Home() {
   const { handleShopNowClick, handleAddToCart, handleAddToWishlist } = useOutletContext() || {};
 
 
-  const [activeReview, setActiveReview] = useState(0)
   const [activeBlog, setActiveBlog] = useState(0)
   const [blogDirection, setBlogDirection] = useState(1)
   const [blogTimerKey, setBlogTimerKey] = useState(0)
@@ -815,7 +573,6 @@ export default function Home() {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [])
-
 
 
   const reviews = [
@@ -847,6 +604,7 @@ export default function Home() {
       date: "3 days ago"
     }
   ]
+  
 
   const features = [
     {
@@ -1184,7 +942,7 @@ export default function Home() {
     },
     {
       name: 'EDIBLES',
-      image: main4,
+      image: category,
       desc: 'Purified extract infusions combined with gourmet Belgian dark confectionery.',
       tag: 'INFUSED EXTRACT'
     }
@@ -1349,7 +1107,7 @@ export default function Home() {
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8"
           >
             {tabShowroomProducts['best-selling'].map((product, idx) => (
-              <ShowroomProductCard
+              <ProductCard
                 key={product.id}
                 product={product}
                 index={idx}
@@ -1400,13 +1158,6 @@ export default function Home() {
                 MUSHROOM CATEGORIES
               </h2>
             </div>
-            <button
-              onClick={handleShopNowClick}
-              className="group px-6 py-2.5 bg-[#FA0C83] hover:bg-[#161616] border border-transparent hover:border-white/10 text-white font-display font-black text-xs uppercase tracking-widest rounded-xl transition-all duration-300 shadow-lg shadow-[#FA0C83]/15 flex items-center gap-1.5 cursor-pointer"
-            >
-              <span>VIEW ALL</span>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-            </button>
           </div>
 
           {/* 3-Column Luxury Animated Category Grid with 3D Parallax Tilt Effects */}
@@ -1424,10 +1175,10 @@ export default function Home() {
       </section>
 
       {/* WAVY DIVIDER 4: Categories (Light) to Testimonials (Image) */}
-      <div 
+      <div
         className="w-full overflow-hidden leading-[0] pointer-events-none relative z-10 -mb-1"
         style={{
-          backgroundImage: `linear-gradient(to right, rgba(250, 12, 131, 0.85), rgba(1, 203, 223, 0.85)), url(${customerbg})`,
+          backgroundImage: `linear-gradient(to right, rgba(9, 9, 11, 0.73), rgba(9, 9, 11, 0.73)), url(${customerbg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed'
@@ -1440,11 +1191,11 @@ export default function Home() {
         </svg>
       </div>
 
-      {/* TESTIMONIALS SECTION (Redesigned matching image style with theme elements) */}
+      {/* TESTIMONIALS SECTION */}
       <section
-        className="w-full py-20 bg-transparent z-10 select-none relative overflow-hidden"
+        className="w-full py-6 md:py-8 bg-transparent z-10 select-none relative overflow-hidden"
         style={{
-          backgroundImage: `linear-gradient(to right, rgba(250, 12, 131, 0.85), rgba(1, 203, 223, 0.85)), url(${customerbg})`,
+          backgroundImage: `linear-gradient(to right, rgba(9, 9, 11, 0.73), rgba(9, 9, 11, 0.73)), url(${customerbg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed'
@@ -1452,7 +1203,7 @@ export default function Home() {
       >
         <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-20">
           {/* Section Heading */}
-          <div className="flex flex-col items-center text-center pb-12 mb-5">
+          <div className="flex flex-col items-center text-center pb-6 mb-4">
             <motion.span
               initial={{ opacity: 0, letterSpacing: '0.1em' }}
               whileInView={{ opacity: 1, letterSpacing: '0.25em' }}
@@ -1477,69 +1228,82 @@ export default function Home() {
             </h2>
           </div>
 
-          {/* Testimonial Content */}
-          <div className="max-w-4xl mx-auto relative min-h-[300px] flex flex-col items-center justify-center">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={activeReview}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
-                className="flex flex-col items-center text-center w-full"
-              >
-                <div className="flex items-start justify-center gap-2 mb-10 max-w-3xl px-4">
-                  <span className="text-4xl text-white font-serif leading-none mt-1">“</span>
-                  <p className="text-white text-base md:text-lg font-medium leading-relaxed">
-                    {reviews[activeReview].text}
-                  </p>
-                  <span className="text-4xl text-white font-serif leading-none mt-auto transform rotate-180 translate-y-2">“</span>
-                </div>
+          {/* Testimonial Continuous Marquee */}
+          <div className="w-[100vw] relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] overflow-hidden py-2 mt-4">
+            <style>
+              {`
+                @keyframes smooth-marquee {
+                  0% { transform: translateX(0); }
+                  100% { transform: translateX(calc(-50% - 12px)); /* account for gap */ }
+                }
+                .animate-smooth-marquee {
+                  animation: smooth-marquee 45s linear infinite;
+                  will-change: transform;
+                }
+                .animate-smooth-marquee:hover {
+                  animation-play-state: paused;
+                }
+              `}
+            </style>
+            <div className="flex items-center justify-start w-max">
+              <div className="animate-smooth-marquee flex gap-6 md:gap-8 w-max pl-6 md:pl-8">
+                {[...reviews, ...reviews, ...reviews, ...reviews, ...reviews, ...reviews].map((review, idx) => (
+                  <div 
+                    key={idx} 
+                    className="relative w-[300px] md:w-[350px] h-[200px] md:h-[195px] flex-shrink-0 bg-zinc-900/50 backdrop-blur-sm border border-white/10 rounded-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.3)] flex flex-col justify-between hover:bg-zinc-900/60 hover:border-white/20 transition-all duration-300 cursor-pointer group overflow-hidden"
+                  >
+                    <div className="relative z-10">
+                      <div className="flex items-center gap-1.5 mb-4">
+                        {[...Array(review.rating)].map((_, i) => (
+                          <Star 
+                            key={i} 
+                            className="w-4 h-4 fill-current text-yellow-400 drop-shadow-md group-hover:scale-125 transition-transform duration-300" 
+                            style={{ transitionDelay: `${i * 40}ms` }} 
+                          />
+                        ))}
+                      </div>
+                      <p className="text-white/95 text-[13px] md:text-sm font-medium leading-relaxed drop-shadow-md line-clamp-4 italic">
+                        "{review.text}"
+                      </p>
+                    </div>
 
-                {/* Avatar */}
-                <div className="w-20 h-20 md:w-24 md:h-24 rounded-full p-1 bg-white/20 shadow-xl mb-4">
-                  <img
-                    src={reviews[activeReview].avatar}
-                    alt={reviews[activeReview].name}
-                    className="w-full h-full object-cover rounded-full"
-                  />
-                </div>
+                    <div className="relative z-10 flex items-center justify-between border-t border-white/10 pt-2 mt-auto">
+                      <div className="flex items-center gap-3">
+                        <div className="flex flex-col">
+                          <h4 className="font-bold text-sm text-[#01CBDF] tracking-wide">{review.name} • {review.location}</h4>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
 
-                {/* Name & Role */}
-                <div className="flex items-center justify-center gap-2 text-white mb-2">
-                  <h4 className="font-bold text-sm md:text-base">{reviews[activeReview].name}</h4>
-                  <span className="text-white/80">-</span>
-                  <span className="text-xs md:text-sm font-medium text-white/90">Customer</span>
-                </div>
+        </div>
 
-                {/* Stars */}
-                <div className="flex justify-center gap-1 mb-8">
-                  {[...Array(reviews[activeReview].rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-current text-yellow-400" />
-                  ))}
-                </div>
-              </motion.div>
-            </AnimatePresence>
-
-            {/* Dots */}
-            <div className="flex justify-center gap-3 mt-4">
-              {reviews.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setActiveReview(idx)}
-                  className={`w-2.5 h-2.5 rounded-full transition-all duration-300 cursor-pointer ${activeReview === idx ? 'w-6 bg-white' : 'bg-white/50 hover:bg-white/80'}`}
-                />
-              ))}
+        {/* Absolute Bottom Right placement for 'more right side end' */}
+        <div className="absolute  right-4  md:right-6 z-30 pointer-events-auto">
+          <div className="flex items-center gap-2 drop-shadow-md">
+            <svg viewBox="0 0 24 24" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+            </svg>
+            <div className="flex flex-col justify-center items-start">
+              <span className="text-[10px] text-zinc-400 font-medium leading-none mb-0.5">Powered by</span>
+              <span className="text-white font-bold text-[15px] leading-none tracking-tight">Google</span>
             </div>
           </div>
         </div>
       </section>
 
       {/* WAVY DIVIDER: Testimonials (Image) to Service Features (Light) */}
-      <div 
+      <div
         className="w-full overflow-hidden leading-[0] pointer-events-none relative z-10 -mb-2"
         style={{
-          backgroundImage: `linear-gradient(to right, rgba(250, 12, 131, 0.85), rgba(1, 203, 223, 0.85)), url(${customerbg})`,
+          backgroundImage: `linear-gradient(to right, rgba(9, 9, 11, 0.73), rgba(9, 9, 11, 0.73)), url(${customerbg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundAttachment: 'fixed'
@@ -1746,7 +1510,7 @@ export default function Home() {
               onClick={() => alert('Redirecting to blog pages...')}
               className="flex items-center gap-2 px-6 py-3 bg-white hover:bg-[#FA0C83] text-zinc-900 hover:text-white text-[10px] font-black uppercase tracking-widest rounded-full transition-colors duration-300 cursor-pointer shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:shadow-[0_0_25px_rgba(250,12,131,0.3)]"
             >
-              Read All Articles <ArrowRight className="w-3.5 h-3.5" />
+              Read More Psilocybin News <ArrowRight className="w-3.5 h-3.5" />
             </motion.button>
           </motion.div>
 
@@ -2032,7 +1796,7 @@ export default function Home() {
               whileTap={{ scale: 0.95 }}
               className="px-8 py-3.5 rounded-full bg-zinc-900 text-white text-[11px] font-black uppercase tracking-widest hover:bg-[#01CBDF] transition-colors duration-300 shadow-[0_4px_14px_rgba(0,0,0,0.1)] hover:shadow-[0_0_30px_rgba(1,203,223,0.3)] cursor-pointer"
             >
-              Check Nationwide Shipping
+              Check Psychedelic Delivery Availability
             </motion.button>
           </div>
         </div>
