@@ -29,6 +29,9 @@ const Select = ({
     className = "",
     disabled = false,
     name = "",
+    lightTheme = false,
+    hideChevron = false,
+    dropdownClassName = "",
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [searchTerm, setSearchTerm] = useState("");
@@ -232,8 +235,8 @@ const Select = ({
             <li
                 onClick={() => handleSelectOption(item)}
                 className={`px-4 py-2.5 cursor-pointer transition-colors flex items-center gap-2 ${
-                    isHighlighted ? "bg-[#FA0C83] text-white font-medium" : "text-zinc-300 hover:bg-zinc-800 hover:text-white"
-                    } ${displayOption === label && !isHighlighted ? "bg-zinc-800 text-white font-medium" : ""
+                    isHighlighted ? "bg-[#FA0C83] text-white font-medium" : (lightTheme ? "text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900" : "text-zinc-300 hover:bg-zinc-800 hover:text-white")
+                    } ${displayOption === label && !isHighlighted ? (lightTheme ? "bg-zinc-50 text-zinc-900 font-medium" : "bg-zinc-800 text-white font-medium") : ""
                     }`}
             >
                 {showCheckbox !== false && isMulti && (
@@ -263,20 +266,22 @@ const Select = ({
                 onKeyDown={handleKeyDown}
                 className={`w-full px-5 text-sm border rounded-full font-medium focus:outline-none flex items-center justify-between transition-colors shadow-sm ${compact ? "min-h-[32px] py-2" : "min-h-[40px] py-2.5"
                     } ${disabled
-                        ? "bg-zinc-900/50 text-zinc-600 cursor-not-allowed border-zinc-800"
-                        : "bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-300 cursor-pointer"
+                        ? (lightTheme ? "bg-zinc-100 text-zinc-400 cursor-not-allowed border-zinc-200" : "bg-zinc-900/50 text-zinc-600 cursor-not-allowed border-zinc-800")
+                        : (lightTheme ? "bg-white border-zinc-200 hover:border-zinc-300 text-zinc-700 cursor-pointer" : "bg-zinc-900 border-zinc-800 hover:border-zinc-700 text-zinc-300 cursor-pointer")
                     } ${className}`}
             >
                 <span className="overflow-hidden whitespace-nowrap text-left font-semibold">
                     {displayOption || displayTitle}
                 </span>
-                <span className={`ml-3 flex items-center justify-center transition-transform duration-300 ${disabled ? "text-zinc-600" : "text-zinc-400"} ${isOpen ? "rotate-180" : "rotate-0"}`}>
-                    <ChevronDown size={16} />
-                </span>
+                {!hideChevron && (
+                    <span className={`ml-3 flex items-center justify-center transition-transform duration-300 ${disabled ? "text-zinc-600" : "text-zinc-400"} ${isOpen ? "rotate-180" : "rotate-0"}`}>
+                        <ChevronDown size={16} />
+                    </span>
+                )}
             </button>
 
             {isOpen && (
-                <div className="absolute z-[9999] mt-2 w-full bg-zinc-900 rounded-xl border border-zinc-800 shadow-xl max-h-72 overflow-hidden flex flex-col right-0 origin-top">
+                <div className={`absolute z-[9999] mt-2 w-full rounded-xl border shadow-xl max-h-72 overflow-hidden flex flex-col right-0 origin-top ${lightTheme ? "bg-white border-zinc-200" : "bg-zinc-900 border-zinc-800"} ${dropdownClassName}`}>
                     {showSearch && (
                         <div className="p-3 border-b border-zinc-800 shrink-0 bg-zinc-900">
                             {searchLabel && (

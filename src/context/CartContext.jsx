@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import main5 from '../assets/main5.jpg';
 import main7 from '../assets/main7.jpg';
 
@@ -8,26 +8,40 @@ export const useCart = () => useContext(CartContext);
 
 export const CartProvider = ({ children }) => {
   // Pre-load cart with two premium reserve mushroom products
-  const [cartItems, setCartItems] = useState([
-    {
-      id: 201,
-      name: 'Golden Teacher Magic Mushrooms (AAA)',
-      price: 49.99,
-      quantity: 1,
-      size: 'Whole',
-      color: 'Signature Red Label',
-      image: main5
-    },
-    {
-      id: 203,
-      name: 'Premium Mind-Focus Microdose Caps',
-      price: 39.99,
-      quantity: 1,
-      size: '30 Caps',
-      color: 'Vegan Cellulose',
-      image: main7
+  const [cartItems, setCartItems] = useState(() => {
+    const savedCart = localStorage.getItem('cartItems');
+    if (savedCart) {
+      try {
+        return JSON.parse(savedCart);
+      } catch (e) {
+        console.error("Failed to parse cart items from local storage", e);
+      }
     }
-  ]);
+    return [
+      {
+        id: 201,
+        name: 'Golden Teacher Magic Mushrooms (AAA)',
+        price: 49.99,
+        quantity: 1,
+        size: 'Whole',
+        color: 'Signature Red Label',
+        image: main5
+      },
+      {
+        id: 203,
+        name: 'Premium Mind-Focus Microdose Caps',
+        price: 39.99,
+        quantity: 1,
+        size: '30 Caps',
+        color: 'Vegan Cellulose',
+        image: main7
+      }
+    ];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('cartItems', JSON.stringify(cartItems));
+  }, [cartItems]);
 
   const [wishlistCount, setWishlistCount] = useState(2);
 
@@ -52,9 +66,10 @@ export const CartProvider = ({ children }) => {
     // API Integration point: e.g. axios.post('/api/cart', product)
     setCartItems((prev) => {
       const existing = prev.find((item) => item.id === product.id);
+      const addedQuantity = product.quantity || 1;
       if (existing) {
         return prev.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === product.id ? { ...item, quantity: item.quantity + addedQuantity } : item
         );
       }
       return [
@@ -63,7 +78,7 @@ export const CartProvider = ({ children }) => {
           id: product.id,
           name: product.name,
           price: product.price,
-          quantity: 1,
+          quantity: addedQuantity,
           size: product.size || 'Whole',
           color: product.color || 'Signature Red',
           image: product.image

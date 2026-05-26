@@ -1,8 +1,8 @@
-import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Layout from './components/Layout'
 import Home from './pages/Home'
 import Blog from './pages/Blog'
+import BlogDetail from './pages/BlogDetail'
 import Faq from './pages/Faq'
 import ContactUs from './pages/ContactUs'
 import Checkout from './pages/Checkout'
@@ -24,6 +24,7 @@ export default function App() {
             <Route index element={<Home />} />
             {/* <Route path="productlist" element={<ProductList />} /> */}
             <Route path="blog" element={<Blog />} />
+            <Route path="blog/:id" element={<BlogDetail />} />
             <Route path="faq" element={<Faq />} />
             <Route path="about" element={<About />} />
             <Route path="contact-us" element={<ContactUs />} />

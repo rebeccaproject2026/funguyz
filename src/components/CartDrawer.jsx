@@ -91,7 +91,9 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onRemoveItem, o
                           <div className="flex justify-between items-start gap-2">
                             <div>
                               <h4 className="font-bold text-[#181211] text-[15px] leading-tight line-clamp-1">{item.name}</h4>
-                              <p className="text-[13px] text-zinc-400 font-medium mt-1">Size: Whole | Color: Signature Red Label</p>
+                              <p className="text-[13px] text-zinc-400 font-medium mt-1">
+                                Size: {item.size || 'Whole'} | Color: {item.color || 'Signature Red Label'}
+                              </p>
                             </div>
                             <button
                               onClick={() => onRemoveItem(item.id)}
@@ -153,7 +155,7 @@ export default function CartDrawer({ isOpen, onClose, cartItems, onRemoveItem, o
                   onClick={() => {
                     onClose();
                     setTimeout(() => {
-                      navigate('/cart', { state: { cartItems, subtotal, tax: +(subtotal*0.08).toFixed(2), total: subtotal + +(subtotal*0.08).toFixed(2), deliveryFee: 0, discount: 0, delivery: 'sameday' } });
+                      navigate('/checkout', { state: { cartItems, subtotal, tax: +(subtotal*0.08).toFixed(2), total: subtotal + +(subtotal*0.08).toFixed(2), deliveryFee: 0, discount: 0, delivery: 'sameday' } });
                     }, 200);
                   }}
                   className="w-full py-3.5 bg-[var(--color-brand-red)] hover:bg-[var(--color-brand-red-hover)] text-white font-bold rounded-xl flex items-center justify-center gap-2 shadow-md transition-colors"

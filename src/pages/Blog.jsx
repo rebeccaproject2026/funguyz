@@ -43,98 +43,7 @@ function HeroParticle({ x, y, size, color, duration, delay }) {
 const CATEGORIES = ['All', 'Microdosing', 'Science & Research', 'Guides', 'Lifestyle']
 const TAGS = ['Psilocybin', 'Microdosing', 'Health', 'Strains', 'Edibles', 'Research', 'Guide']
 
-const BLOG_POSTS = [
-  {
-    id: 1,
-    title: 'The Ultimate Guide to Microdosing: Schedules and Benefits',
-    excerpt: 'Explore the revolutionary practice of microdosing psilocybin. Learn about the Fadiman protocol, the Stamets Stack, and how sub-perceptual doses can enhance daily productivity and mood.',
-    content: 'Microdosing has taken the wellness and tech worlds by storm. Rather than seeking a hallucinogenic journey, practitioners consume small, sub-perceptual amounts of psilocybin—usually between 0.1g and 0.3g of dried mushrooms. Proponents report heightened creativity, lower anxiety, improved focus, and a general state of flow. In this guide, we break down the protocols (like taking it every third day or four days on, three days off) and safe practices for beginners.',
-    category: 'Microdosing',
-    tags: ['Microdosing', 'Health', 'Guide'],
-    image: main5,
-    date: 'May 18, 2026',
-    month: 'May 2026',
-    author: 'Dr. Evelyn Carter',
-    readTime: '6 min read',
-    views: 1240,
-    featured: true
-  },
-  {
-    id: 2,
-    title: 'Psilocybin and Mental Health: What Modern Science Tells Us',
-    excerpt: 'Leading universities are publishing groundbreaking studies on how psilocybin assisted therapy is showing unprecedented success rates for treatment-resistant depression and anxiety.',
-    content: 'Recent clinical trials from Johns Hopkins, Imperial College London, and other top-tier institutions have shown that psilocybin-assisted therapy can produce immediate and long-lasting reductions in depressive symptoms. By temporarily quietening the default mode network (DMN), psilocybin allows the brain to form new neural connections, breaking cycles of rumination and negative thinking.',
-    category: 'Science & Research',
-    tags: ['Psilocybin', 'Health', 'Research'],
-    image: main6,
-    date: 'May 12, 2026',
-    month: 'May 2026',
-    author: 'Marcus Vance',
-    readTime: '8 min read',
-    views: 980,
-    featured: false
-  },
-  {
-    id: 3,
-    title: 'How to Store Magic Mushrooms to Keep Them Fresh',
-    excerpt: 'Proper storage is crucial to preserve the potency of psilocybin. Discover the best practices for short-term and long-term storage, including freeze-drying and vacuum sealing.',
-    content: 'To maintain the active psilocybin compounds in your magic mushrooms, you must protect them from four primary enemies: heat, light, moisture, and oxygen. For short-term storage, keeping them in an airtight glass jar with a silica gel pack in a dark cupboard is ideal. For long-term preservation, ensuring they are cracker-dry and vacuum-sealing them in light-proof bags is the gold standard.',
-    category: 'Guides',
-    tags: ['Guide', 'Strains'],
-    image: main1,
-    date: 'May 05, 2026',
-    month: 'May 2026',
-    author: 'Sarah Jenkins',
-    readTime: '4 min read',
-    views: 450,
-    featured: false
-  },
-  {
-    id: 4,
-    title: 'Exploring Shroom Strains: Golden Teacher vs. Penis Envy',
-    excerpt: 'Not all cubensis strains are created equal. We compare the gentle, introspective guidance of Golden Teachers with the legendary intensity and visual palette of Penis Envy.',
-    content: 'Golden Teachers are the quintessential entry strain—known for their gentle, philosophical lessons and moderate potency. Penis Envy, on the other hand, is a mutated cultivar containing significantly higher concentrations of psilocin and psilocybin. Beginners should approach Penis Envy with extra caution, as doses under 1.5g can trigger intense hallucinogenic experiences.',
-    category: 'Guides',
-    tags: ['Strains', 'Psilocybin'],
-    image: main2,
-    date: 'April 28, 2026',
-    month: 'April 2026',
-    author: 'Chef Shroomy',
-    readTime: '5 min read',
-    views: 1120,
-    featured: false
-  },
-  {
-    id: 5,
-    title: 'The Rise of Shroom Chocolates and Gummies',
-    excerpt: 'Edibles are transforming the magic mushroom market. Learn about dosage precision, taste masking, and why organic fruit gummies are becoming the preferred entry point for beginners.',
-    content: 'For many, the bitter taste and earthy texture of raw mushrooms are a major barrier. Infused edibles like chocolates and gummies solve this by masking the flavor completely and offering precise, pre-measured dosages. This makes microdosing and light recreational trips much more approachable, especially for users wanting a discrete and delicious experience.',
-    category: 'Lifestyle',
-    tags: ['Edibles', 'Lifestyle'],
-    image: main3,
-    date: 'April 20, 2026',
-    month: 'April 2026',
-    author: 'Luna Bennett',
-    readTime: '5 min read',
-    views: 890,
-    featured: false
-  },
-  {
-    id: 6,
-    title: 'Flow States & Creativity: Elevating Workspace Performance',
-    excerpt: 'Discover how micro-doses of natural adaptogens and psilocybin interact with the brain’s default mode network to unlock lateral thinking and reduce mental fatigue.',
-    content: 'Many creatives and professionals use microdosing as a tool to access flow states—periods of intense, effortless concentration where self-consciousness fades. Scientific hypotheses suggest that sub-perceptual psilocybin boosts serotonin transmission, helping quiet the inner critic and allowing for more novel connections and rapid problem-solving.',
-    category: 'Lifestyle',
-    tags: ['Microdosing', 'Lifestyle'],
-    image: main4,
-    date: 'April 15, 2026',
-    month: 'April 2026',
-    author: 'Dr. Evelyn Carter',
-    readTime: '7 min read',
-    views: 670,
-    featured: false
-  }
-]
+import { BLOG_POSTS } from '../data/blogData'
 
 const MOCK_COMMENTS = [
   {
@@ -162,7 +71,6 @@ export default function Blog() {
   const [searchQuery, setSearchQuery] = useState('')
   const [selectedMonth, setSelectedMonth] = useState('All')
   const [selectedTag, setSelectedTag] = useState('All')
-  const [activePost, setActivePost] = useState(null)
   
   // API State
   const [posts, setPosts] = useState([])
@@ -339,14 +247,13 @@ export default function Blog() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {filteredPosts.map((post, index) => {
                   return (
-                    <motion.article
-                      key={post.id}
-                      initial={{ opacity: 0, y: 30 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: index * 0.05 }}
-                      className="group cursor-pointer flex flex-col justify-between h-full bg-white border border-zinc-200 rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#FA0C83] hover:shadow-lg hover:shadow-[#FA0C83]/5"
-                      onClick={() => setActivePost(post)}
-                    >
+                    <Link key={post.id} to={`/blog/${post.id}`}>
+                      <motion.article
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: index * 0.05 }}
+                        className="group cursor-pointer flex flex-col justify-between h-full bg-white border border-zinc-200 rounded-2xl overflow-hidden transition-all duration-300 hover:border-[#FA0C83] hover:shadow-lg hover:shadow-[#FA0C83]/5"
+                      >
                       <div>
                         {/* Image Wrapper */}
                         <div className="aspect-[16/10] overflow-hidden relative">
@@ -395,6 +302,7 @@ export default function Blog() {
                         </button>
                       </div>
                     </motion.article>
+                    </Link>
                   )
                 })}
               </div>
@@ -462,9 +370,9 @@ export default function Blog() {
                       className="space-y-4"
                     >
                       {recentPosts.map((post) => (
-                        <div
+                        <Link
                           key={post.id}
-                          onClick={() => setActivePost(post)}
+                          to={`/blog/${post.id}`}
                           className="flex items-center gap-3 group cursor-pointer"
                         >
                           <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 border border-zinc-200 bg-zinc-50">
@@ -476,7 +384,7 @@ export default function Blog() {
                             </h5>
                             <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">{post.date}</p>
                           </div>
-                        </div>
+                        </Link>
                       ))}
                     </motion.div>
                   )}
@@ -490,9 +398,9 @@ export default function Blog() {
                       className="space-y-4"
                     >
                       {popularPosts.map((post) => (
-                        <div
+                        <Link
                           key={post.id}
-                          onClick={() => setActivePost(post)}
+                          to={`/blog/${post.id}`}
                           className="flex items-center gap-3 group cursor-pointer"
                         >
                           <div className="w-12 h-12 rounded-lg overflow-hidden shrink-0 border border-zinc-200 bg-zinc-50">
@@ -504,7 +412,7 @@ export default function Blog() {
                             </h5>
                             <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">{post.date} • {post.views} views</p>
                           </div>
-                        </div>
+                        </Link>
                       ))}
                     </motion.div>
                   )}
@@ -614,72 +522,7 @@ export default function Blog() {
 
       </div>
 
-      {/* Article Detail Modal Overlay */}
-      <AnimatePresence>
-        {activePost && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4"
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="bg-white border border-zinc-200 w-full max-w-3xl rounded-3xl overflow-hidden max-h-[85vh] flex flex-col shadow-2xl relative"
-            >
-              {/* Close Button */}
-              <button
-                onClick={() => setActivePost(null)}
-                className="absolute top-4 right-4 z-10 w-9 h-9 rounded-full bg-white border border-zinc-200 hover:border-[#FA0C83] text-zinc-550 hover:text-zinc-900 flex items-center justify-center transition-colors cursor-pointer"
-              >
-                ✕
-              </button>
 
-              <div className="overflow-y-auto p-6 md:p-8 space-y-6">
-                <div className="aspect-[16/9] rounded-2xl overflow-hidden relative">
-                  <img
-                    src={activePost.image}
-                    alt={activePost.title}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
-                  <span className="absolute bottom-4 left-4 bg-[#FA0C83] text-white text-[9px] font-black uppercase tracking-widest px-3.5 py-1.5 rounded-full">
-                    {activePost.category}
-                  </span>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex flex-wrap items-center gap-4 text-zinc-400 text-xs font-bold uppercase tracking-widest">
-                    <span>By {activePost.author}</span>
-                    <span>•</span>
-                    <span>{activePost.date}</span>
-                    <span>•</span>
-                    <span>{activePost.readTime}</span>
-                  </div>
-
-                  <h2 className="text-xl md:text-3xl font-black uppercase tracking-tight text-zinc-900 leading-tight">
-                    {activePost.title}
-                  </h2>
-                </div>
-
-                <div className="text-zinc-650 text-sm md:text-base leading-relaxed space-y-4 font-normal">
-                  <p className="font-medium text-zinc-800 border-l-2 border-[#01CBDF] pl-4 italic">
-                    {activePost.excerpt}
-                  </p>
-                  <p>
-                    {activePost.content || 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam convallis libero ut sem pulvinar, non egestas dolor tristique. Cras ultrices lorem leo, id convallis sem porttitor sed. Ut molestie nisl vitae est semper dignissim. Pellentesque feugiat augue non purus condimentum sodales. Duis dictum elit nec ante lobortis efficitur.'}
-                  </p>
-                  <p>
-                    Proin eleifend dictum sodales. Quisque gravida sodales accumsan. Curabitur vel tortor feugiat, laoreet sem ut, mollis nisl. Suspendisse eu scelerisque mauris. Quisque sollicitudin sem augue, sed tempor ex lacinia sed. Nunc egestas ipsum id diam interdum rhoncus.
-                  </p>
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* WAVY DIVIDER: Page to Footer */}
       <div className="w-full overflow-hidden leading-[0] bg-[#f4f4f6] pointer-events-none relative z-10 -mb-1">

@@ -2,11 +2,13 @@
 /* eslint-disable no-useless-assignment */
 /* eslint-disable no-unused-vars */
 import { useState, useRef, useEffect } from 'react'
-import { useOutletContext } from 'react-router-dom'
+import { useOutletContext, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence, useMotionValue, useSpring, useAnimationFrame } from 'framer-motion'
+import { BLOG_POSTS } from '../data/blogData'
 import { Star, ArrowRight, Sparkles, Shuffle, ZoomIn, Truck, Calendar, ChevronLeft, ChevronRight, MapPin } from 'lucide-react'
 import Hero from '../components/Hero'
 import ShippingModal from '../components/ShippingModal'
+import DeliveryMapModal from '../components/DeliveryMapModal'
 import ProductCard from '../components/ProductCard'
 
 // Import user-uploaded luxury mushroom assets
@@ -559,6 +561,7 @@ function OfferCard({ offer, handleShopNowClick, index }) {
 }
 
 export default function Home() {
+  const navigate = useNavigate();
   const { handleShopNowClick, handleAddToCart, handleAddToWishlist } = useOutletContext() || {};
 
 
@@ -567,6 +570,8 @@ export default function Home() {
   const [blogTimerKey, setBlogTimerKey] = useState(0)
   const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200)
   const [isShippingModalOpen, setIsShippingModalOpen] = useState(false)
+  const [isMapModalOpen, setIsMapModalOpen] = useState(false);
+  const [selectedMapRegion, setSelectedMapRegion] = useState('Toronto');
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth)
@@ -633,56 +638,7 @@ export default function Home() {
     }
   ]
 
-  const blogPosts = [
-    {
-      title: "How to Choose the Perfect Magic Mushroom Dose",
-      image: main1,
-      desc: "From beginner microdoses to deep therapeutic journeys, learn how to calibrate your experience safely.",
-      date: "May 18, 2026",
-      tag: "GUIDES",
-      author: "Dr. Shroom"
-    },
-    {
-      title: "The Science of Psilocybin and Neuroplasticity",
-      image: main2,
-      desc: "Explore the latest clinical studies showing how microdosing can forge new pathways in the human brain.",
-      date: "May 15, 2026",
-      tag: "SCIENCE",
-      author: "Neuro Team"
-    },
-    {
-      title: "Inside Our Gourmet Infused Confectionery Process",
-      image: main3,
-      desc: "Go behind the scenes of our confectionery kitchen where culinary arts meet premium psilocybin extract.",
-      date: "May 10, 2026",
-      tag: "CULTURE",
-      author: "Chef Funguy"
-    },
-    {
-      title: "Microdosing Protocols: Fadiman vs. Stamets Method",
-      image: main4,
-      desc: "An in-depth comparison of the two leading microdosing regimens, schedules, and recommended protocols.",
-      date: "May 08, 2026",
-      tag: "PROTOCOL",
-      author: "Elena R."
-    },
-    {
-      title: "Unlocking the Spiritual Potential of Magic Honey",
-      image: main5,
-      desc: "Discover the ancient history, benefits, and preparation guidelines for organic, psilocybin-infused honey.",
-      date: "May 05, 2026",
-      tag: "HISTORY",
-      author: "Zen Alchemist"
-    },
-    {
-      title: "The Legality and Research of Mushrooms in Canada",
-      image: main6,
-      desc: "Get up to speed with the latest legislative policies, medical exemptions, and research updates in Canada.",
-      date: "May 02, 2026",
-      tag: "COMPLIANCE",
-      author: "Barrister Cole"
-    }
-  ]
+  const blogPosts = BLOG_POSTS
 
   // Removed auto-play for testimonials as requested
 
@@ -1458,7 +1414,7 @@ export default function Home() {
 
       {/* WAVY DIVIDER 5: Service Features (Light) to Blog (Dark) */}
       <div className="w-full overflow-hidden leading-[0] bg-[#f4f4f6] pointer-events-none relative z-10 -mb-1">
-        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[40px] sm:h-[60px] md:h-[90px]">
+        <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="relative block w-full h-[40px] sm:h-[60px] md:h-[80px]">
           <path d="M0,70 C300,30 650,110 900,50 C1050,20 1150,60 1200,75 L1200,120 L0,120 Z" fill="#FA0C83" opacity="0.1" />
           <path d="M0,80 C250,40 600,100 850,40 C1000,10 1120,50 1200,65 L1200,120 L0,120 Z" fill="#01CBDF" opacity="0.08" />
           <path d="M0,90 C200,50 500,90 800,50 C950,30 1100,70 1200,60 L1200,120 L0,120 Z" fill="#111113" />
@@ -1470,7 +1426,7 @@ export default function Home() {
         {/* Subtle bg texture */}
         <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
           style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.8) 1px, transparent 1px)', backgroundSize: '32px 32px' }} />
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-[#FA0C83]/[0.05] blur-[140px] pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[450px] h-[500px] rounded-full bg-[#FA0C83]/[0.05] blur-[140px] pointer-events-none" />
 
         <div className="max-w-7xl mx-auto px-4 md:px-12 relative z-10">
           {/* Heading */}
@@ -1591,6 +1547,8 @@ export default function Home() {
                       if (diff !== 0) {
                         setBlogDirection(diff > 0 ? 1 : -1)
                         setActiveBlog(originalIdx)
+                      } else {
+                        navigate(`/blog/${post.id}`)
                       }
                     }}
                     className="absolute w-[290px] sm:w-[330px] md:w-[350px] bg-white border border-zinc-100 rounded-3xl overflow-hidden flex flex-col cursor-pointer transition-colors duration-300 hover:border-zinc-200"
@@ -1609,7 +1567,7 @@ export default function Home() {
                         className="absolute top-4 left-4 text-[9px] font-black text-white px-3 py-1.5 rounded-full uppercase tracking-widest"
                         style={{ background: accentColor }}
                       >
-                        {post.tag}
+                        {post.category}
                       </span>
                       {/* Animated top border */}
                       <motion.div
@@ -1634,7 +1592,7 @@ export default function Home() {
                       </h3>
 
                       {/* Desc */}
-                      <p className="text-zinc-500 text-[11px] sm:text-xs leading-relaxed mb-4 flex-1 line-clamp-2 sm:line-clamp-none">{post.desc}</p>
+                      <p className="text-zinc-500 text-[11px] sm:text-xs leading-relaxed mb-4 flex-1 line-clamp-2 sm:line-clamp-none">{post.excerpt}</p>
 
                       {/* Author row + CTA */}
                       <div className="flex items-center justify-between pt-3.5 border-t border-zinc-100">
@@ -1706,6 +1664,49 @@ export default function Home() {
               </button>
             </div>
           </div>
+
+          {/* Minimal Newsletter Subscribe Section */}
+          <div className="max-w-2xl mx-auto px-4 mt-15  relative z-20 text-center">
+            <motion.h3 
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-2xl sm:text-3xl font-black text-white uppercase tracking-tight mb-3"
+            >
+              Subscribe To Our Newsletter
+            </motion.h3>
+            <motion.p 
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="text-zinc-400 text-sm sm:text-base font-medium mb-8"
+            >
+              Stay updated with the latest news, local events, exclusive discounts, special offers, and more.
+            </motion.p>
+            
+            <motion.form 
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              onSubmit={(e) => { e.preventDefault(); alert('Subscribed to the newsletter!'); }} 
+              className="relative max-w-md mx-auto flex items-center bg-zinc-900 border border-zinc-800 rounded-full p-1 shadow-[0_0_20px_rgba(0,0,0,0.5)] transition-all focus-within:border-[#FA0C83] focus-within:shadow-[0_0_25px_rgba(250,12,131,0.2)]"
+            >
+              <input 
+                type="email" 
+                placeholder="Enter email to subscribe" 
+                required
+                className="w-full bg-transparent px-5 py-2 sm:py-3 text-white text-sm focus:outline-none placeholder:text-zinc-500"
+              />
+              <button 
+                type="submit"
+                className="shrink-0 bg-[#FA0C83] hover:bg-[#d80870] text-white px-6 py-2.5 sm:py-3 rounded-full font-black uppercase text-[10px] sm:text-[11px] tracking-widest transition-all duration-300 shadow-[0_0_15px_rgba(250,12,131,0.3)] cursor-pointer"
+              >
+                Subscribe
+              </button>
+            </motion.form>
+          </div>
         </div>
       </section>
 
@@ -1754,12 +1755,10 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 max-w-4xl mx-auto">
             {[
-              { city: 'Vancouver', province: 'British Columbia', status: 'Same-Day Delivery' },
-              { city: 'Toronto', province: 'Ontario', status: '2-Day Shipping' },
-              { city: 'Montreal', province: 'Quebec', status: '2-Day Shipping' },
-              { city: 'Calgary', province: 'Alberta', status: 'Express Delivery' },
+              { city: 'Toronto', province: 'Ontario' },
+              { city: 'Greater Toronto Area', province: 'Ontario' },
             ].map((loc, idx) => (
               <motion.div
                 key={idx}
@@ -1768,21 +1767,27 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 whileHover={{ y: -8 }}
-                className="group relative bg-white border border-zinc-100 p-6 rounded-3xl overflow-hidden hover:border-[#FA0C83]/30 hover:shadow-xl transition-all duration-300 cursor-default"
+                onClick={() => {
+                  setSelectedMapRegion(loc.city === 'Toronto' ? 'Toronto' : 'GTA');
+                  setIsMapModalOpen(true);
+                }}
+                className="group relative bg-white border border-zinc-100 p-5 rounded-3xl overflow-hidden hover:border-[#FA0C83]/30 hover:shadow-xl transition-all duration-300 cursor-pointer"
               >
                 {/* Glow on hover */}
                 <div className="absolute inset-0 bg-gradient-to-br from-[#FA0C83]/0 to-[#01CBDF]/0 group-hover:from-[#FA0C83]/5 group-hover:to-[#01CBDF]/5 transition-colors duration-500" />
 
-                <div className="w-12 h-12 rounded-2xl bg-zinc-50 border border-zinc-100 flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 group-hover:shadow-[0_0_25px_rgba(250,12,131,0.15)] group-hover:border-[#FA0C83]/20">
-                  <MapPin className="w-5 h-5 text-[#FA0C83]" />
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="w-10 h-10 rounded-2xl bg-zinc-50 border border-zinc-100 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 group-hover:shadow-[0_0_25px_rgba(250,12,131,0.15)] group-hover:border-[#FA0C83]/20">
+                    <MapPin className="w-4 h-4 text-[#FA0C83]" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-black text-zinc-900 uppercase tracking-wider leading-none">{loc.city}</h3>
+                    <p className="text-zinc-500 text-[10px] font-semibold uppercase tracking-widest mt-1">{loc.province}</p>
+                  </div>
                 </div>
 
-                <h3 className="text-xl font-black text-zinc-900 uppercase tracking-wider mb-1">{loc.city}</h3>
-                <p className="text-zinc-500 text-xs font-semibold uppercase tracking-widest mb-5">{loc.province}</p>
-
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#01CBDF]/10 border border-[#01CBDF]/20 text-[#01CBDF] text-[9px] font-black uppercase tracking-widest">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#01CBDF] animate-pulse" />
-                  {loc.status}
+                <div className="flex items-center gap-2 text-[#FA0C83] text-[10px] font-black uppercase tracking-widest group-hover:translate-x-1 transition-transform">
+                  View Delivery Locations <ArrowRight className="w-3 h-3" />
                 </div>
               </motion.div>
             ))}
@@ -1804,6 +1809,11 @@ export default function Home() {
       <ShippingModal
         isOpen={isShippingModalOpen}
         onClose={() => setIsShippingModalOpen(false)}
+      />
+      <DeliveryMapModal
+        isOpen={isMapModalOpen}
+        onClose={() => setIsMapModalOpen(false)}
+        initialRegion={selectedMapRegion}
       />
     </>
   )

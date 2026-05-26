@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Link } from 'react-router-dom'
 import {
   Search, Heart, ShoppingBag, User, ChevronDown,
-  X, Flame, Tag, Clock, ArrowRight, CornerDownRight, Store
+  X, Flame, Tag, Clock, ArrowRight, CornerDownRight, Store, Menu,
+  Settings, FileText, HelpCircle, LogOut, Activity, MessageSquare,
+  Package, MessageCircle
 } from 'lucide-react'
-import MushroomLogo from './MushroomLogo'
+// import MushroomLogo from './MushroomLogo'
 import funguyzLogo from '../assets/images/funguyzlogo.png'
 
 export default function Header({
@@ -22,6 +24,9 @@ export default function Header({
   // Search Overlay State
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+
+  // Mobile Menu State
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   // Category Shelf state
   const [isCategoryOpen, setIsCategoryOpen] = useState(false)
@@ -48,6 +53,21 @@ export default function Header({
     }
   }, [isSearchOpen])
 
+  // Prevent background scrolling when overlays are open
+  useEffect(() => {
+    if (isMobileMenuOpen || isSearchOpen) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+      document.documentElement.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+      document.documentElement.style.overflow = 'unset';
+    };
+  }, [isMobileMenuOpen, isSearchOpen]);
+
   const navItems = [
     { id: 'shop', label: 'SHOP', hasDropdown: true },
     { id: 'on-sale', label: 'ON SALE', hasDropdown: false },
@@ -72,13 +92,15 @@ export default function Header({
 
   // Decide if dock is in Shrunk or Expanded state
   // Once scrolled or on mobile, header stays compact
-  const isCompact = isScrolled || windowWidth < 768
+  const isMobile = windowWidth < 768
+  const isCompact = isScrolled || isMobile
 
   return (
     <>
-      {/* Dynamic Floating Navbar Dock */}
       <div
-        className="fixed left-0 right-0 top-12 flex justify-center z-50 px-4 select-none font-sans"
+        className={`fixed left-0 right-0 flex justify-center select-none font-sans transition-all duration-300 z-[50] ${
+          isScrolled ? (isMobile ? 'top-0' : 'top-2 px-3') : (isMobile ? 'top-[37px]' : 'top-12 px-4')
+        }`}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => {
           setIsHovered(false)
@@ -88,21 +110,103 @@ export default function Header({
       >
         <motion.div
           layout
-          className={`flex items-center justify-between bg-zinc-700/95 backdrop-blur-lg border border-white/20 shadow-2xl relative transition-all duration-300 ${isCompact
-            ? 'w-full max-w-[420px] px-5 py-2 rounded-full'
-            : 'w-full max-w-7xl px-8 py-1 rounded-[2rem]'
-            }`}
+          className={`flex items-center justify-between bg-zinc-700/95 backdrop-blur-lg shadow-2xl relative transition-all duration-300 ${
+            isMobile
+              ? 'w-full px-4 py-2 border-b border-white/20'
+              : isCompact
+                ? 'w-full max-w-[420px] px-5 py-2 rounded-full border border-white/20'
+                : 'w-full max-w-7xl px-8 py-1 rounded-[2rem] border border-white/20'
+          }`}
           transition={{ type: 'spring', damping: 26, stiffness: 220 }}
         >
-          {isCompact ? (
+          {isMobile ? (
             <>
-              {/* COMPACT LEFT: Search, Heart */}
-              <div className="flex items-center gap-3">
+              {/* MOBILE LEFT: Menu, Search */}
+              <div className="flex items-center gap-2 sm:gap-3">
+                <motion.button
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  className="p-2 sm:p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all cursor-pointer text-white/90"
+                >
+                  <Menu className="w-4.5 h-4.5" />
+                </motion.button>
                 <motion.button
                   onClick={() => setIsSearchOpen(true)}
                   whileHover={{ scale: 1.08 }}
                   whileTap={{ scale: 0.92 }}
-                  className="p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all cursor-pointer text-white/90"
+                  className="p-2 sm:p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all cursor-pointer text-white/90 flex"
+                >
+                  <Search className="w-4.5 h-4.5" />
+                </motion.button>
+              </div>
+
+              {/* MOBILE CENTER: Logo (Absolute) */}
+              <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+                <Link to="/" className="cursor-pointer block">
+                  <img
+                    src={funguyzLogo}
+                    alt="Funguyz Logo"
+                    className="w-auto object-contain transition-all duration-300"
+                    style={{
+                      height: '47px',
+                      marginTop: '-7px',
+                      marginBottom: '-8px'
+                    }}
+                  />
+                </Link>
+              </div>
+
+              {/* MOBILE RIGHT: Wishlist & Cart */}
+              <div className="flex items-center gap-2 sm:gap-3">
+                <motion.button
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  className="relative p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red hover:shadow-md transition-all cursor-pointer text-white/90 group"
+                >
+                  <Heart className="w-4.5 h-4.5" />
+                  {wishlistCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-4 h-4 bg-brand-red text-white group-hover:bg-white group-hover:text-brand-red transition-colors rounded-full flex items-center justify-center text-[9px] font-bold">
+                      {wishlistCount}
+                    </span>
+                  )}
+                </motion.button>
+                <motion.button
+                  onClick={onOpenCart}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="relative p-2 sm:p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red hover:shadow-lg transition-all cursor-pointer text-white group"
+                >
+                  <ShoppingBag className="w-4.5 h-4.5 opacity-80" />
+                  {cartCount > 0 && (
+                    <motion.span
+                      initial={{ scale: 0 }}
+                      animate={{ scale: 1 }}
+                      className="absolute -top-1 -right-1 w-4 h-4 bg-brand-red text-white group-hover:bg-white group-hover:text-brand-red transition-colors rounded-full flex items-center justify-center text-[9px] font-bold"
+                    >
+                      {cartCount}
+                    </motion.span>
+                  )}
+                </motion.button>
+              </div>
+            </>
+          ) : isCompact ? (
+            <>
+              {/* COMPACT LEFT: Menu, Search */}
+              <div className="flex items-center gap-2 sm:gap-3">
+                <motion.button
+                  onClick={() => setIsMobileMenuOpen(true)}
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  className="p-2 sm:p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all cursor-pointer text-white/90"
+                >
+                  <Menu className="w-4.5 h-4.5" />
+                </motion.button>
+                <motion.button
+                  onClick={() => setIsSearchOpen(true)}
+                  whileHover={{ scale: 1.08 }}
+                  whileTap={{ scale: 0.92 }}
+                  className="p-2 sm:p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all cursor-pointer text-white/90 hidden sm:flex"
                 >
                   <Search className="w-4.5 h-4.5" />
                 </motion.button>
@@ -137,10 +241,10 @@ export default function Header({
               </div>
 
               {/* COMPACT RIGHT: Shop, Cart */}
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3">
                 <Link
                   to="/productlist"
-                  className="p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all cursor-pointer text-white/90"
+                  className="p-2 sm:p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red transition-all cursor-pointer text-white/90"
                 >
                   <Store className="w-4.5 h-4.5" />
                 </Link>
@@ -148,7 +252,7 @@ export default function Header({
                   onClick={onOpenCart}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="relative p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red hover:shadow-lg transition-all cursor-pointer text-white group"
+                  className="relative p-2 sm:p-2.5 rounded-full border border-white/10 bg-white/10 hover:bg-brand-red hover:text-white hover:border-brand-red hover:shadow-lg transition-all cursor-pointer text-white group"
                 >
                   <ShoppingBag className="w-4.5 h-4.5 opacity-80" />
                   {cartCount > 0 && (
@@ -376,10 +480,11 @@ export default function Header({
       <AnimatePresence>
         {isSearchOpen && (
           <motion.div
-            className="fixed inset-0 z-50 bg-[#09090b]/98 backdrop-blur-2xl flex flex-col p-6 md:p-16 justify-between select-none"
+            className="fixed inset-0 z-50 bg-[#09090b]/98 backdrop-blur-2xl flex flex-col p-6 md:p-16 justify-between select-none pointer-events-auto"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            onWheel={(e) => e.stopPropagation()}
           >
             {/* Overlay Header */}
             <div className="w-full flex justify-between items-center max-w-6xl mx-auto">
@@ -450,6 +555,148 @@ export default function Header({
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* MOBILE MENU OVERLAY (Sidebar Drawer) */}
+      <AnimatePresence>
+        {isMobileMenuOpen && (
+          <div className="fixed inset-0 z-[100] flex">
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+            />
+
+            {/* Left Drawer */}
+            <motion.div
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+              className="relative w-[85%] max-w-[340px] bg-white h-[100dvh] shadow-2xl flex flex-col z-[101] pointer-events-auto"
+              onWheel={(e) => e.stopPropagation()}
+            >
+              <button 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="absolute top-6 right-6 p-2 rounded-full text-zinc-400 hover:text-zinc-900 transition-colors z-10 bg-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {/* Profile Header */}
+              <div className="shrink-0 p-6 pt-10 border-b border-zinc-200 flex items-center gap-4 bg-white">
+                <div className="w-14 h-14 rounded-full bg-brand-red flex items-center justify-center shrink-0">
+                  <User className="w-6 h-6 text-white" />
+                </div>
+                <div>
+                  <h3 className="text-zinc-900 font-bold text-lg leading-tight tracking-wide">Frank Nava</h3>
+                  <p className="text-zinc-500 text-[13px] tracking-wide mt-0.5">Premium Member</p>
+                </div>
+              </div>
+
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto overscroll-contain bg-white flex flex-col">
+                <div className="p-6 space-y-8 flex-1">
+                  {/* SHOP CATEGORIES */}
+                  <div className="space-y-1">
+                    <h4 className="text-zinc-900 text-[11px] font-bold uppercase tracking-widest mb-3">Shop Categories</h4>
+                    
+                    {[
+                      { icon: 'custom', label: 'Magic Mushrooms', path: '/productlist', highlight: true },
+                      { icon: Activity, label: 'Microdose', path: '/productlist' },
+                      { icon: Heart, label: 'Edibles', path: '/productlist' },
+                      { icon: Store, label: 'Capsules', path: '/productlist' },
+                    ].map((cat, idx) => (
+                      <Link to={cat.path} key={idx} onClick={() => setIsMobileMenuOpen(false)} className="block">
+                        {cat.highlight ? (
+                          <div className="bg-brand-red rounded-xl p-4 flex items-center justify-between cursor-pointer mb-2">
+                            <div className="flex items-center gap-3 text-white">
+                              {cat.icon === 'custom' ? (
+                                <img src={funguyzLogo} alt="Icon" className="w-5 h-5 object-contain filter brightness-0 invert" />
+                              ) : (
+                                <cat.icon className="w-5 h-5" />
+                              )}
+                              <span className="font-bold text-[15px]">{cat.label}</span>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="py-3 px-2 flex items-center justify-between cursor-pointer hover:bg-zinc-50 rounded-lg transition-colors group">
+                            <div className="flex items-center gap-3 text-zinc-900">
+                              <cat.icon className="w-5 h-5 text-zinc-800" strokeWidth={1.5} />
+                              <span className="font-semibold text-[15px]">{cat.label}</span>
+                            </div>
+                          </div>
+                        )}
+                      </Link>
+                    ))}
+                  </div>
+
+                  {/* MY ACCOUNT */}
+                  <div className="space-y-1 pb-4 pt-4 border-t border-zinc-200">
+                    <h4 className="text-zinc-900 text-[11px] font-bold uppercase tracking-widest mb-3">My Account</h4>
+                    
+                    {[
+                      { icon: User, label: 'Profile Settings', path: '/profile' },
+                      { icon: FileText, label: 'Order History', path: '/orders' },
+                      { icon: HelpCircle, label: 'Help Center', path: '/#help' },
+                    ].map((item, idx) => (
+                      <Link to={item.path} key={idx} onClick={() => setIsMobileMenuOpen(false)} className="block">
+                        <div className="py-3 px-2 flex items-center gap-3 cursor-pointer hover:bg-zinc-50 rounded-lg transition-colors group">
+                          <item.icon className="w-5 h-5 text-zinc-800" strokeWidth={1.5} />
+                          <span className="text-zinc-900 font-semibold text-[15px]">{item.label}</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Bottom Section (Now Scrollable) */}
+                <div className="shrink-0 p-6 border-t border-zinc-200 mt-auto">
+                  <button 
+                    onClick={() => { setIsMobileMenuOpen(false); onOpenLogin(); }}
+                    className="flex items-center gap-3 text-brand-red hover:text-[#d80870] transition-colors mb-6 font-bold text-[15px] w-full text-left"
+                  >
+                    <LogOut className="w-5 h-5" strokeWidth={1.5} />
+                    Logout
+                  </button>
+                  <div className="flex items-center justify-between text-[11px] font-medium text-zinc-500">
+                    <span>© 2026 Fun Guyz</span>
+                    <div className="flex items-center gap-2">
+                      <div className="w-2 h-2 rounded-full bg-emerald-500" />
+                      <span>Server Online</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Sticky Mobile Bottom Navigation */}
+      {isMobile && (
+        <div className="fixed bottom-0 left-0 right-0 bg-zinc-700/95 backdrop-blur-lg border-t border-white/20 shadow-[0_-4px_20px_rgba(0,0,0,0.3)] z-[40] px-6 py-3 flex items-center justify-between pb-safe">
+          <Link to="/productlist" className="flex flex-col items-center gap-1 text-white/90 hover:text-brand-red transition-colors">
+            <Store className="w-6 h-6" strokeWidth={1.5} />
+            <span className="text-[10px] font-bold uppercase tracking-wide">Shop</span>
+          </Link>
+          <Link to="/#sale" className="flex flex-col items-center gap-1 text-white/90 hover:text-brand-red transition-colors">
+            <Tag className="w-6 h-6" strokeWidth={1.5} />
+            <span className="text-[10px] font-bold uppercase tracking-wide">On Sale</span>
+          </Link>
+          <Link to="/#bundles" className="flex flex-col items-center gap-1 text-white/90 hover:text-brand-red transition-colors">
+            <Package className="w-6 h-6" strokeWidth={1.5} />
+            <span className="text-[10px] font-bold uppercase tracking-wide">Bundles</span>
+          </Link>
+          <button className="flex flex-col items-center gap-1 text-white/90 hover:text-brand-red transition-colors">
+            <MessageCircle className="w-6 h-6" strokeWidth={1.5} />
+            <span className="text-[10px] font-bold uppercase tracking-wide">Chat</span>
+          </button>
+        </div>
+      )}
     </>
   )
 }

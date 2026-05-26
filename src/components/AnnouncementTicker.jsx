@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { BookOpen, HelpCircle, Phone, Sparkles, Users } from 'lucide-react'
-
+import { motion } from 'framer-motion'
 
 export default function AnnouncementTicker() {
   return (
@@ -12,8 +12,7 @@ export default function AnnouncementTicker() {
         className="flex-1 overflow-hidden relative h-5 flex items-center cursor-pointer group"
         aria-label="Go to Blog"
       >
-        <div className="flex w-max animate-[marquee_50s_linear_infinite] group-hover:[animation-play-state:paused]">
-
+        <div className="ticker-track">
           {[1, 2].map((_, i) => (
             <div
               key={i}
@@ -54,17 +53,20 @@ export default function AnnouncementTicker() {
         </div>
       </Link>
 
-      {/* Tailwind v4 Inline Animation */}
+      {/* Hardware Accelerated Inline Animation */}
       <style>{`
-  @keyframes marquee {
-    0% {
-      transform: translateX(0%);
-    }
-    100% {
-      transform: translateX(-50%);
-    }
-  }
-`}</style>
+        @keyframes smooth-marquee {
+          0% { transform: translate3d(0, 0, 0); }
+          100% { transform: translate3d(-50%, 0, 0); }
+        }
+        .ticker-track {
+          display: flex;
+          width: max-content;
+          animation: smooth-marquee 40s linear infinite;
+          will-change: transform;
+          -webkit-transform: translate3d(0,0,0);
+        }
+      `}</style>
 
       {/* Quick utility links */}
       <div className="hidden md:flex items-center gap-6 text-white font-semibold border-l border-zinc-800 pl-12">

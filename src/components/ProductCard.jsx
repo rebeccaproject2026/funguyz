@@ -89,7 +89,7 @@ export default function ProductCard({ product, handleAddToCart, handleAddToWishl
             )}
             <div className={`absolute inset-0 bg-black/50 backdrop-blur-[2.5px] transition-all duration-300 flex items-center justify-center z-20 ${isHovered ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
               <button
-                onClick={(e) => { e.stopPropagation(); if (handleAddToCart) handleAddToCart(product); }}
+                onClick={(e) => { e.stopPropagation(); if (handleAddToCart) handleAddToCart({ ...product, quantity: qty, size: selectedVariant }); }}
                 className={`bg-white hover:bg-[#FA0C83] hover:text-white text-[#161616] font-display font-black text-[10px] py-2.5 px-5.5 rounded-xl shadow-lg transition-all duration-300 transform cursor-pointer ${isHovered ? 'translate-y-0' : 'translate-y-3'}`}
               >
                 ADD TO BAG

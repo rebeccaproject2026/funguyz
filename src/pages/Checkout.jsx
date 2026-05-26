@@ -1,30 +1,31 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { CreditCard, Truck, ShieldCheck, MapPin, Package, User, Tag, FlaskConical, ChevronDown, ChevronUp, ArrowRight } from 'lucide-react';
+import { CreditCard, Truck, ShieldCheck, MapPin, Package, User, Tag, FlaskConical, ChevronDown, ChevronUp, ArrowRight, Mail, Phone, Home, Hash, Map, Navigation, CheckCircle2 } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import Stepper from '../components/Stepper';
 import OrderSummary from '../components/OrderSummary';
 import { useCart } from '../context/CartContext';
+import { Icon } from '@iconify/react';
 
 export default function Checkout() {
   const navigate = useNavigate();
   
-  const [paymentMethod, setPaymentMethod] = useState('card');
+  const [paymentMethod, setPaymentMethod] = useState('cod');
   const [promoApplied, setPromoApplied] = useState(null);
   const [promo, setPromo] = useState('');
   const [promoError, setPromoError] = useState('');
   const [isSummaryOpen, setIsSummaryOpen] = useState(false);
-  const delivery = 'sameday';
+  const [deliveryType, setDeliveryType] = useState('sameday'); // 'sameday', 'express', 'ship'
 
-  const { cartItems, cartSubtotal, cartTax, cartTotal, handleUpdateQuantity, clearCart } = useCart();
+  const { cartItems, cartSubtotal, handleUpdateQuantity, clearCart } = useCart();
 
-  const deliveryFee = delivery === 'express' ? 5 : 0;
+  const deliveryFee = deliveryType === 'express' ? 5 : 0;
   const discount = promoApplied
       ? promoApplied.type === 'percent'
           ? +(cartSubtotal * promoApplied.discount / 100).toFixed(2)
           : promoApplied.discount
       : 0;
-  const total = cartTotal + deliveryFee - discount;
+  const total = cartSubtotal + deliveryFee - discount;
 
   const handleUpdateQuantityWrapper = (id, delta) => {
     const item = cartItems.find(i => i.id === id);
@@ -60,7 +61,7 @@ export default function Checkout() {
 
   const handlePlaceOrder = () => {
     const orderSnapshot = {
-      cartItems, subtotal: cartSubtotal, tax: cartTax, total, deliveryFee, discount, delivery
+      cartItems, subtotal: cartSubtotal, total, deliveryFee, discount, deliveryType, paymentMethod
     };
     clearCart();
     navigate('/order-complete', { state: orderSnapshot });
@@ -72,140 +73,179 @@ export default function Checkout() {
         
         <Stepper currentStep={2} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        <div className="grid grid-cols-1  lg:grid-cols-12 gap-5">
           {/* Left Column - Forms */}
-          <motion.div 
+            <motion.div 
             variants={containerVariants}
             initial="hidden"
             animate="visible"
             className="lg:col-span-7 space-y-5"
           >
-            {/* Contact Info */}
-            <motion.section variants={itemVariants} className="bg-white p-6 sm:p-8 rounded-2xl shadow-md text-[#181211]">
-              <h2 className="text-xl sm:text-2xl font-bold mb-6">Contact Information</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                  <label className="text-sm text-[#181211] font-semibold mb-1.5 block">First Name *</label>
-                  <input type="text" className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] transition-colors bg-white placeholder-gray-400" placeholder="John" />
-                </div>
-                <div>
-                  <label className="text-sm text-[#181211] font-semibold mb-1.5 block">Last Name *</label>
-                  <input type="text" className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] transition-colors bg-white placeholder-gray-400" placeholder="Doe" />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="text-sm text-[#181211] font-semibold mb-1.5 block">Email Address *</label>
-                  <input type="email" className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] transition-colors bg-white placeholder-gray-400" placeholder="john@example.com" />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="text-sm text-[#181211] font-semibold mb-1.5 block">Phone Number *</label>
-                  <input type="tel" className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] transition-colors bg-white placeholder-gray-400" placeholder="+1 (555) 000-0000" />
-                </div>
-              </div>
-            </motion.section>
-
-            {/* Billing & Shipping Address */}
-            <motion.section variants={itemVariants} className="bg-white p-6 sm:p-8 rounded-2xl shadow-md text-[#181211]">
-              <h2 className="text-xl sm:text-2xl font-bold mb-6">Billing and Delivery</h2>
-              
-              <div className="flex flex-col gap-5">
-                <div>
-                  <label className="text-sm text-[#181211] font-semibold mb-1.5 block">Country / Region *</label>
-                  <select className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] transition-colors bg-white appearance-none">
-                    <option>United States (US)</option>
-                    <option>Canada</option>
-                    <option>United Kingdom (UK)</option>
-                    <option>Australia</option>
-                  </select>
-                </div>
-                <div>
-                  <label className="text-sm text-[#181211] font-semibold mb-1.5 block">Street Address *</label>
-                  <input type="text" className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] transition-colors bg-white placeholder-gray-400 mb-3" placeholder="House number and street name" />
-                  <input type="text" className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] transition-colors bg-white placeholder-gray-400" placeholder="Apartment, suite, unit, etc. (optional)" />
-                </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-                  <div>
-                    <label className="text-sm text-[#181211] font-semibold mb-1.5 block">City *</label>
-                    <input type="text" className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] transition-colors bg-white placeholder-gray-400" placeholder="San Francisco" />
-                  </div>
-                  <div>
-                    <label className="text-sm text-[#181211] font-semibold mb-1.5 block">State *</label>
-                    <select className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] transition-colors bg-white appearance-none">
-                      <option>California</option>
-                      <option>New York</option>
-                      <option>Texas</option>
-                      <option>Florida</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="text-sm text-[#181211] font-semibold mb-1.5 block">ZIP Code *</label>
-                    <input type="text" className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] transition-colors bg-white placeholder-gray-400" placeholder="94103" />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-sm text-[#181211] font-semibold mb-1.5 block">Order Notes (optional)</label>
-                  <textarea className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] transition-colors bg-white placeholder-gray-400 h-24 resize-none" placeholder="Notes about your order, e.g. special notes for delivery."></textarea>
-                </div>
-              </div>
-            </motion.section>
-
-            {/* Payment Method */}
-            <motion.section variants={itemVariants} className="bg-white p-6 sm:p-8 rounded-2xl shadow-md text-[#181211]">
-              <h2 className="text-xl sm:text-2xl font-bold mb-1">Payment Method</h2>
-              <p className="text-sm text-[#64748B] mb-6">Choose how you'd like to pay for your order securely.</p>
-              
-              <div className="space-y-4 mb-6">
-                <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${paymentMethod === 'card' ? 'bg-[var(--color-brand-red)]/5 border-[var(--color-brand-red)]' : 'bg-white border-[#E2E8F0] hover:border-gray-300'}`}>
-                  <input 
-                    type="radio" 
-                    name="payment" 
-                    className="w-4 h-4 accent-[var(--color-brand-red)]"
-                    checked={paymentMethod === 'card'}
-                    onChange={() => setPaymentMethod('card')}
-                  />
-                  <div className="ml-3 flex items-center justify-between w-full">
-                    <span className="font-semibold text-[#181211]">Credit Card</span>
-                    <div className="flex gap-2">
-                      <div className="w-9 h-6 bg-gray-100 text-[#475569] rounded flex items-center justify-center text-[10px] font-bold border border-gray-200">VISA</div>
-                      <div className="w-9 h-6 bg-gray-100 text-[#475569] rounded flex items-center justify-center text-[10px] font-bold border border-gray-200">MC</div>
-                    </div>
-                  </div>
-                </label>
-                
-                <label className={`flex items-center p-4 border rounded-xl cursor-pointer transition-all ${paymentMethod === 'paypal' ? 'bg-[var(--color-brand-red)]/5 border-[var(--color-brand-red)]' : 'bg-white border-[#E2E8F0] hover:border-gray-300'}`}>
-                  <input 
-                    type="radio" 
-                    name="payment" 
-                    className="w-4 h-4 accent-[var(--color-brand-red)]"
-                    checked={paymentMethod === 'paypal'}
-                    onChange={() => setPaymentMethod('paypal')}
-                  />
-                  <span className="ml-3 font-semibold text-[#181211]">PayPal</span>
-                </label>
-              </div>
-
-              {paymentMethod === 'card' && (
-                <motion.div 
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: 'auto' }}
-                  className="space-y-5 overflow-hidden"
+            <motion.section variants={itemVariants} className="bg-white p-6  border border-[#CBD5E1] sm:p-8 rounded-2xl shadow-md text-[#181211]">
+              {/* Delivery Method Buttons */}
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-4">
+                <button 
+                  onClick={() => setDeliveryType('sameday')}
+                  className={`flex-1 py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-200 border ${deliveryType === 'sameday' ? 'bg-[var(--color-brand-red)] text-white border-[var(--color-brand-red)] shadow-[0_4px_12px_rgba(255,20,147,0.2)]' : 'bg-white text-[#181211] border-[#E2E8F0] hover:border-[#CBD5E1] hover:bg-zinc-50'}`}
                 >
-                  <div>
-                    <label className="text-sm text-[#181211] font-semibold mb-1.5 block">Card Number</label>
-                    <input type="text" className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] transition-colors bg-white placeholder-gray-400 font-mono" placeholder="0000 0000 0000 0000" />
+                    <Icon className={`w-5 h-5 ${deliveryType === 'sameday' ? 'text-white' : 'text-zinc-400'}`} icon="ri:truck-line" /> Same Day Delivery
+                </button>
+                <button 
+                  onClick={() => setDeliveryType('express')}
+                  className={`flex-1 py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-200 border ${deliveryType === 'express' ? 'bg-[var(--color-brand-red)] text-white border-[var(--color-brand-red)] shadow-[0_4px_12px_rgba(255,20,147,0.2)]' : 'bg-white text-[#181211] border-[#E2E8F0] hover:border-[#CBD5E1] hover:bg-zinc-50'}`}
+                >
+                  <div className="flex items-center gap-2">
+                    <Icon className={`w-5 h-5 ${deliveryType === 'express' ? 'text-white' : 'text-zinc-400'}`} icon="mdi:thunder-outline" /> Express Delivery
                   </div>
-                  <div className="grid grid-cols-2 gap-5">
+                </button>
+                <button 
+                  onClick={() => setDeliveryType('ship')}
+                  className={`flex-1 py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all duration-200 border ${deliveryType === 'ship' ? 'bg-[var(--color-brand-red)] text-white border-[var(--color-brand-red)] shadow-[0_4px_12px_rgba(255,20,147,0.2)]' : 'bg-white text-[#181211] border-[#E2E8F0] hover:border-[#CBD5E1] hover:bg-zinc-50'}`}
+                >
+                    <Icon className={`w-5 h-5 ${deliveryType === 'ship' ? 'text-white' : 'text-zinc-400'}`} icon="lucide:ship" /> Ship to My Address
+                </button>
+              </div>
+
+              {/* Dynamic Helper Text */}
+              <p className="text-[#3f3f46] text-sm font-medium mb-6">
+                {deliveryType === 'sameday' && "Orders are delivered straight to your location within 3 to 5 Hours in select local areas."}
+                {deliveryType === 'express' && "Express Delivery under 2 Hours (Minimum Order $120.00)"}
+                {deliveryType === 'ship' && "Ships from one of our stores and arrives in 1 to 5 days, depending on the city and province."}
+              </p>
+
+              {/* Form Heading */}
+              {/* <h2 className="text-xl sm:text-2xl font-bold mb-6">
+                {deliveryType === 'ship' ? 'Shipping Address' : (deliveryType === 'express' ? 'Express Delivery Address' : 'Delivery Address')}
+              </h2> */}
+
+              <div className="flex flex-col gap-6">
+                
+                {/* Contact Information Group */}
+                <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-4 sm:p-5">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="bg-[var(--color-brand-red)]/10 p-1.5 rounded-lg">
+                      <User className="w-4 h-4 text-[var(--color-brand-red)]" />
+                    </div>
+                    <h3 className="font-bold text-[#0F172A]">Contact Details</h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="text-sm text-[#181211] font-semibold mb-1.5 block">Expiry Date</label>
-                      <input type="text" className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] transition-colors bg-white placeholder-gray-400 font-mono" placeholder="MM/YY" />
+                      <label className="text-sm text-[#475569] font-medium mb-1.5 block">First Name *</label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <User className="h-4 w-4 text-zinc-400" />
+                        </div>
+                        <input type="text" className="w-full border border-[#E2E8F0] rounded-xl pl-10 pr-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] focus:ring-1 focus:ring-[var(--color-brand-red)] transition-all bg-white placeholder-gray-400 shadow-sm" placeholder="First Name" />
+                      </div>
                     </div>
                     <div>
-                      <label className="text-sm text-[#181211] font-semibold mb-1.5 block">CVC</label>
-                      <input type="text" className="w-full border border-[#E2E8F0] rounded-lg px-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] transition-colors bg-white placeholder-gray-400 font-mono" placeholder="123" />
+                      <label className="text-sm text-[#475569] font-medium mb-1.5 block">Last Name *</label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <User className="h-4 w-4 text-zinc-400" />
+                        </div>
+                        <input type="text" className="w-full border border-[#E2E8F0] rounded-xl pl-10 pr-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] focus:ring-1 focus:ring-[var(--color-brand-red)] transition-all bg-white placeholder-gray-400 shadow-sm" placeholder="Last Name" />
+                      </div>
                     </div>
                   </div>
-                </motion.div>
-              )}
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <div>
+                      <label className="text-sm text-[#475569] font-medium mb-1.5 block">Phone Number *</label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Phone className="h-4 w-4 text-zinc-400" />
+                        </div>
+                        <input type="tel" className="w-full border border-[#E2E8F0] rounded-xl pl-10 pr-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] focus:ring-1 focus:ring-[var(--color-brand-red)] transition-all bg-white placeholder-gray-400 shadow-sm" placeholder="Phone Number" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm text-[#475569] font-medium mb-1.5 block">Email Address *</label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Mail className="h-4 w-4 text-zinc-400" />
+                        </div>
+                        <input type="email" className="w-full border border-[#E2E8F0] rounded-xl pl-10 pr-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] focus:ring-1 focus:ring-[var(--color-brand-red)] transition-all bg-white placeholder-gray-400 shadow-sm" placeholder="Email Address" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Delivery Information Group */}
+                <div className="bg-[#F8FAFC] border border-[#E2E8F0] rounded-2xl p-4 sm:p-5">
+                  <div className="flex items-center gap-2 mb-4">
+                    <div className="bg-[var(--color-brand-red)]/10 p-1.5 rounded-lg">
+                      <MapPin className="w-4 h-4 text-[var(--color-brand-red)]" />
+                    </div>
+                    <h3 className="font-bold text-[#0F172A]">Delivery Details</h3>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr] gap-4">
+                    <div>
+                      <label className="text-sm text-[#475569] font-medium mb-1.5 block">
+                        {deliveryType === 'ship' ? 'Shipping Address *' : (deliveryType === 'express' ? 'Express Delivery Address *' : 'Delivery Address *')}
+                      </label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Home className="h-4 w-4 text-zinc-400" />
+                        </div>
+                        <input type="text" className="w-full border border-[#E2E8F0] rounded-xl pl-10 pr-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] focus:ring-1 focus:ring-[var(--color-brand-red)] transition-all bg-white placeholder-gray-400 shadow-sm" placeholder={deliveryType === 'ship' ? 'Shipping Address' : 'Delivery Address'} />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm text-[#475569] font-medium mb-1.5 block">Unit (optional)</label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Hash className="h-4 w-4 text-zinc-400" />
+                        </div>
+                        <input type="text" className="w-full border border-[#E2E8F0] rounded-xl pl-10 pr-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] focus:ring-1 focus:ring-[var(--color-brand-red)] transition-all bg-white placeholder-gray-400 shadow-sm" placeholder="Unit#" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+                    <div>
+                      <label className="text-sm text-[#475569] font-medium mb-1.5 block">City *</label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Map className="h-4 w-4 text-zinc-400" />
+                        </div>
+                        <input type="text" className="w-full border border-[#E2E8F0] rounded-xl pl-10 pr-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] focus:ring-1 focus:ring-[var(--color-brand-red)] transition-all bg-white placeholder-gray-400 shadow-sm" placeholder="City" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm text-[#475569] font-medium mb-1.5 block">Province *</label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <MapPin className="h-4 w-4 text-zinc-400" />
+                        </div>
+                        <input type="text" className="w-full border border-[#E2E8F0] rounded-xl pl-10 pr-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] focus:ring-1 focus:ring-[var(--color-brand-red)] transition-all bg-white placeholder-gray-400 shadow-sm" placeholder="Province" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="text-sm text-[#475569] font-medium mb-1.5 block">Postal Code *</label>
+                      <div className="relative">
+                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                          <Navigation className="h-4 w-4 text-zinc-400" />
+                        </div>
+                        <input type="text" className="w-full border border-[#E2E8F0] rounded-xl pl-10 pr-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] focus:ring-1 focus:ring-[var(--color-brand-red)] transition-all bg-white placeholder-gray-400 shadow-sm" placeholder="Postal Code" />
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4">
+                    <label className="text-sm text-[#475569] font-medium mb-1.5 block">
+                      {deliveryType === 'ship' ? 'Shipping Notes (optional)' : (deliveryType === 'express' ? 'Express Delivery Notes (optional)' : 'Delivery Notes (optional)')}
+                    </label>
+                    <textarea 
+                      className="w-full border border-[#E2E8F0] rounded-xl px-4 py-3 text-sm text-[#181211] outline-none focus:border-[var(--color-brand-red)] focus:ring-1 focus:ring-[var(--color-brand-red)] transition-all bg-white placeholder-gray-400 h-24 resize-none shadow-sm" 
+                      placeholder={deliveryType === 'express' ? "Express Delivery Notes" : (deliveryType === 'ship' ? "Shipping Notes" : "Delivery Notes")}
+                    ></textarea>
+                  </div>
+                </div>
+
+              </div>
             </motion.section>
           </motion.div>
 
@@ -218,9 +258,9 @@ export default function Checkout() {
           >
             <OrderSummary 
                 subtotal={cartSubtotal}
-                tax={cartTax}
                 total={total}
                 deliveryFee={deliveryFee}
+                deliveryType={deliveryType}
                 discount={discount}
                 cartItems={cartItems}
                 onUpdateQuantity={handleUpdateQuantityWrapper}
@@ -232,6 +272,8 @@ export default function Checkout() {
                 promoApplied={promoApplied}
                 onApplyPromo={handleApplyPromo}
                 onRemovePromo={() => { setPromoApplied(null); setPromo(''); }}
+                paymentMethod={paymentMethod}
+                setPaymentMethod={setPaymentMethod}
                 buttonText="Place Order Securely"
                 buttonIcon={ShieldCheck}
                 onButtonClick={handlePlaceOrder}
@@ -312,11 +354,9 @@ export default function Checkout() {
                     </div>
                     <div className="flex justify-between text-sm text-[#475569]">
                       <span>Delivery</span>
-                      <span className="font-bold text-green-600">FREE</span>
-                    </div>
-                    <div className="flex justify-between text-sm text-[#475569]">
-                      <span>Estimated Taxes</span>
-                      <span className="font-bold text-[#0F172A]">${cartTax.toFixed(2)}</span>
+                      <span className={deliveryFee > 0 ? "font-bold text-[#0F172A]" : "font-bold text-green-600"}>
+                        {deliveryFee > 0 ? `$${deliveryFee.toFixed(2)}` : 'FREE'}
+                      </span>
                     </div>
                   </div>
                 </div>
